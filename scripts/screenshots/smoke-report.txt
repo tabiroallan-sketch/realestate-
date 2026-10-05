@@ -1,0 +1,1 @@
+4 elements still hidden under prefers-reduced-motion

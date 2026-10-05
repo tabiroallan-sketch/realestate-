@@ -1,0 +1,109 @@
+{
+  "$comment": "Single source of truth for image and video assets. Consumed by scripts/build-*.mjs and src/data/assets.ts. Source files in ./image carry timestamp suffixes and literal U+2026 characters (unsafe in URLs), so this manifest defines the canonical public names. Each source must appear exactly once — the build script enforces uniqueness.",
+  "width": 1376,
+  "height": 768,
+  "images": [
+    {
+      "key": "heroPoster",
+      "source": "Verde_Residences_luxury_towers_N…_20261005095409.jpg",
+      "dir": "hero",
+      "name": "hero-poster",
+      "alt": "The Verde Residences at midday — three interconnected ivory towers with curved balcony bands and blue-tinted glazing rising above landscaped gardens in Nairobi.",
+      "priority": true
+    },
+    {
+      "key": "heroTowers",
+      "source": "Verde_Residences_luxury_towers_N…_20261005095427.jpg",
+      "dir": "hero",
+      "name": "hero-towers",
+      "alt": "Low angle view of The Verde Residences towers, bronze vertical fins catching the afternoon sun against a clear Nairobi sky."
+    },
+    {
+      "key": "developmentTowers",
+      "source": "Verde_Residences_development_view_20261005095613.jpg",
+      "dir": "architecture",
+      "name": "development-towers",
+      "alt": "Wide view of the full Verde Residences development, showing the three towers, reflecting pools and mature tropical landscaping."
+    },
+    {
+      "key": "entranceStreet",
+      "source": "Verde_Residences_exterior_street…_20261005095442.jpg",
+      "dir": "architecture",
+      "name": "entrance-street",
+      "alt": "The street-level entrance to The Verde Residences, framed by bronze fins and a deep ivory colonnade."
+    },
+    {
+      "key": "lobbyWide",
+      "source": "Verde_Residences_lobby_interior_…_20261005095500.jpg",
+      "dir": "interiors",
+      "name": "lobby-wide",
+      "alt": "The residents' lobby at The Verde Residences — a double-height space with sculptural lighting and stone floors."
+    },
+    {
+      "key": "lobbyDetail",
+      "source": "Lobby_interior_with_sculptural_s…_20261005095447.jpg",
+      "dir": "interiors",
+      "name": "lobby-detail",
+      "alt": "Close view of the sculptural stone and bronze installation in the Verde Residences lobby."
+    },
+    {
+      "key": "residenceLiving",
+      "source": "Luxury_apartment_interior_view_20261005095506.jpg",
+      "dir": "interiors",
+      "name": "residence-living",
+      "alt": "Interior of a one bedroom residence at The Verde Residences, with a full-height glazed wall and warm timber joinery."
+    },
+    {
+      "key": "livingRoom",
+      "source": "Luxury_apartment_living_room_int…_20261005095512.jpg",
+      "dir": "interiors",
+      "name": "living-room",
+      "alt": "The living room of a residence at The Verde Residences, opening onto a deep balcony with the Nairobi skyline beyond."
+    },
+    {
+      "key": "balconySkyline",
+      "source": "Balcony_view_of_Nairobi_skyline_20261005095517.jpg",
+      "dir": "lifestyle",
+      "name": "balcony-skyline",
+      "alt": "Panoramic view of the Nairobi skyline from a private balcony at The Verde Residences."
+    },
+    {
+      "key": "rooftopRise",
+      "source": "Camera_rising_over_building_rooftop_20261005095523.jpg",
+      "dir": "lifestyle",
+      "name": "rooftop-rise",
+      "alt": "View rising over the rooftop of The Verde Residences towards the infinity pool and the skyline beyond."
+    },
+    {
+      "key": "rooftopPool",
+      "source": "Rooftop_pool_overlooking_Nairobi…_20261005095537.jpg",
+      "dir": "lifestyle",
+      "name": "rooftop-pool",
+      "alt": "The rooftop infinity pool at The Verde Residences overlooking the Nairobi skyline at golden hour."
+    },
+    {
+      "key": "nightFacade",
+      "source": "Building_facade_at_night_20261005095607.jpg",
+      "dir": "architecture",
+      "name": "night-facade",
+      "alt": "The bronze fin facade of The Verde Residences illuminated at night."
+    },
+    {
+      "key": "nightIlluminated",
+      "source": "Verde_Residences_illuminated_at_…_20261005095550.jpg",
+      "dir": "architecture",
+      "name": "night-illuminated",
+      "alt": "The Verde Residences fully illuminated at night, the towers glowing above the landscaped grounds."
+    }
+  ],
+  "video": {
+    "key": "heroAerial",
+    "source": "Aerial_view_of_residential_towers_20261005091050.mp4",
+    "dir": "video",
+    "name": "hero-aerial",
+    "width": 1280,
+    "height": 720,
+    "duration": 10.005,
+    "alt": "Slow aerial pass across the three towers of The Verde Residences."
+  }
+}

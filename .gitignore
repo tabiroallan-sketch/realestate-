@@ -36,6 +36,18 @@ yarn-error.log*
 # vercel
 .vercel
 
+# redirect output from backgrounded dev/prod servers
+scripts/server.log
+scripts/server.err
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# supplied source material
+# image/ holds the originals the brief was delivered with — 14 files, 17 MB,
+# including a 6.5 MB source video. The processed, serving copies live in
+# public/assets/ and ARE tracked; scripts/build-image-ladder.mjs and
+# scripts/build-video.mjs derive them from these files. Nothing in the build
+# reads image/, so tracking it would only bloat the repository.
+/image/

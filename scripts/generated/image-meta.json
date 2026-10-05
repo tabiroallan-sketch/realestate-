@@ -1,0 +1,197 @@
+{
+  "heroPoster": {
+    "srcSetBase": "/assets/hero/hero-poster",
+    "widths": [
+      640,
+      960,
+      1376
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "width": 1376,
+    "height": 768,
+    "blurDataURL": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAAAQBACdASoYAA0APwlur0+rpiQiMAgBcCEJZgCdAB9xkK5bJFJfcm/IgAD3TY2672RPFJm05jsE9bvIg04xsXelwi3tLhMQb3PvXrdLWhfMj5ReKyFcAHtMg4EwRaLvcUMPOwwOIpg5h8cz9GcW4aktgNo0Y9xYZSncChfmoM0OlM+zDSDwAA=="
+  },
+  "heroTowers": {
+    "srcSetBase": "/assets/hero/hero-towers",
+    "widths": [
+      640,
+      960,
+      1376
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "width": 1376,
+    "height": 768,
+    "blurDataURL": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAABQBACdASoYAA0APwlurk+rpiQiMAgBcCEJYgCdIKtJ/gNCmb/aF4CsOMYAANtCVFbw4B1CI7DIl5rXMeOs14KwNL42MAOuOBu6l0/e1sLG2ZsZvuwOPoCfmCqIzmhsm+5CJpU1JWKCmV9LPwnIq7c8kOaCzHGdscHXPHQDIyeZg83fpFcVcwAA"
+  },
+  "developmentTowers": {
+    "srcSetBase": "/assets/architecture/development-towers",
+    "widths": [
+      640,
+      960,
+      1376
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "width": 1376,
+    "height": 768,
+    "blurDataURL": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAAAQBACdASoYAA0APwlur0+rpiQiMAgBcCEJQBdgBCzPxDh1KdV4NUwgAADLQTRxrX/8cAf7hmUxxb88w87VP5484mYER0of6ifdr8Q3izTguT8DRo02XOGmYBXTf4sWS10O+x5Do1p+6EhmBxFtL9kC0wAAAA=="
+  },
+  "entranceStreet": {
+    "srcSetBase": "/assets/architecture/entrance-street",
+    "widths": [
+      640,
+      960,
+      1376
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "width": 1376,
+    "height": 768,
+    "blurDataURL": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAACQAwCdASoYAA0APwlur0+rpiQiMAgBcCEJYgCdABP13G3bHyxgAP3+DD5AsGSaUf9d6rPI02qlOuJ2gAzUXkioZHGB9lcBxFs/56+qjitWS7Q0VhDCbJxh+ZlivC0Jo8CX4gZNhlWsosUx4ElXgekMKy36Fwi+guWf7yrleNt1hnjFDBdLSsAA"
+  },
+  "lobbyWide": {
+    "srcSetBase": "/assets/interiors/lobby-wide",
+    "widths": [
+      640,
+      960,
+      1376
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "width": 1376,
+    "height": 768,
+    "blurDataURL": "data:image/webp;base64,UklGRqgAAABXRUJQVlA4IJwAAABQBACdASoYAA0APwlur0+rpiQiMAgBcCEJaACdMoACseEqAN9tWvQNymIAAPqW3xJhuRh/0D5OlPpfVsz92j0WcjYSv68/GH0vMZlxH9HGT2LvXLmVs1ONQioifbTnkl9x+dD28zbf9O2TFNaU9ihjO6vSonpjS0IUHXOLDd3+OFSU7kwD1EcqjhnheIKsIfNw0uZJGLNo21s9XAA="
+  },
+  "lobbyDetail": {
+    "srcSetBase": "/assets/interiors/lobby-detail",
+    "widths": [
+      640,
+      960,
+      1376
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "width": 1376,
+    "height": 768,
+    "blurDataURL": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAABQBACdASoYAA0APwlur0+rpiQiMAgBcCEJbACdMoCGACY1OpbPe+Nnb0oAAP1qWfSsrxIxJ83+ioFRICtn3026yJapoJ3S8j4Zc7d07Eq5R80Wx+ckKbCFk6Kj+LDkzqIcPXdkhIfP47b9L1JRzNcDYTf2atZRjQvpsNSrYkEuHbJVi5+4BmzJB4CNhYZWMrgRzAAA"
+  },
+  "residenceLiving": {
+    "srcSetBase": "/assets/interiors/residence-living",
+    "widths": [
+      640,
+      960,
+      1376
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "width": 1376,
+    "height": 768,
+    "blurDataURL": "data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAABwBACdASoYAA0APwlurk+rpiQiMAgBcCEJYgCdMoFWANarKG0wfw1cbgvi8AD+P4SnsdF2nJqSukkNn61nKRj3+Pjky7z+5PKiOHSSKAkK+NA9P4URZyLi8a0RoXixzooN15pIkx4N3kYH8bsHOdvS5TBQ3pVBv4Oh4j+aXHSHum9QoKrdq2p8GFX9MgJEzimCboC1AAA="
+  },
+  "livingRoom": {
+    "srcSetBase": "/assets/interiors/living-room",
+    "widths": [
+      640,
+      960,
+      1376
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "width": 1376,
+    "height": 768,
+    "blurDataURL": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAAAQBACdASoYAA0APwlur0+rpiQiMAgBcCEJQBOmUAA1t7+B4a8/Eg4UAAD+P4SorJOeKAdLT3Ny53/kG3kYrXHqROTDvvCoWSjc2VScM/QbHDpxHPJDITXKN1CWdr22koSz28EKhSlqQ80E+BJrxciG8h2exs54j+aYJlMoQ9QmyaIE6WtO2/GdYzCWmBTlYG0/AAAA"
+  },
+  "balconySkyline": {
+    "srcSetBase": "/assets/lifestyle/balcony-skyline",
+    "widths": [
+      640,
+      960,
+      1376
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "width": 1376,
+    "height": 768,
+    "blurDataURL": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAADwAwCdASoYAA0APwlurk+rpiQiMAgBcCEJQBOmUABv91/DI8TKu5dQAPwbczzIRTY+psty8oxkMdRyHzOsdyxrpQ5iUUJZ/bPBoj4BnTjLSL3jGSrHG8tq6STKlSJ8UMX/FZ4c0nlJ2G7+9Y5YS8v53rHzgqj82z6ZGBJF9y/8jxfmw+CVrxWAL02WrB7nxUAAAA=="
+  },
+  "rooftopRise": {
+    "srcSetBase": "/assets/lifestyle/rooftop-rise",
+    "widths": [
+      640,
+      960,
+      1376
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "width": 1376,
+    "height": 768,
+    "blurDataURL": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAAAwBACdASoYAA0APwlurk+rpiQiMAgBcCEJYwCdACIfxugcVot5n/1C4kAA/Z1H56WuAms38nxXIP2wsbmUsxPSTWILY5lEvKyEzKVVkmE1hVGPgQVVqnx0z0SIStWQ1/xhmZ1MsOvm1nCCpEMmm0S2SCcIoqqtRWlF+gAA"
+  },
+  "rooftopPool": {
+    "srcSetBase": "/assets/lifestyle/rooftop-pool",
+    "widths": [
+      640,
+      960,
+      1376
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "width": 1376,
+    "height": 768,
+    "blurDataURL": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAABQBACdASoYAA0APwlurk+rpiQiMAgBcCEJQBOmUABWug1iJCaMOVEyClVAAPKjlkZqqhqJhgVHt5JXVajvAyL1Ldlyw3nedNcIb6Wj4g5vsm8cov8WqUFxuS/WJOltrsZ+Q/G++knzsu9pcoVqY8mKb+igro6X34aHoszkvibORksOQPB+KAAA"
+  },
+  "nightFacade": {
+    "srcSetBase": "/assets/architecture/night-facade",
+    "widths": [
+      640,
+      960,
+      1376
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "width": 1376,
+    "height": 768,
+    "blurDataURL": "data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAAAQBACdASoYAA0APwlur0+rpiQiMAgBcCEJZgCdB3gAcNijmyDeh0xCoAD+zxC4O4Qs8Xs3hBYUgXYQK7It/ooftcP1gpQrqTMSbb83+3yJesQt9MzmKXdEG1/oTKJ1v211QcF3rAz6betMm9a6mmah3ZaMxI1TZsjNVVmsGVukWmi5ZuDouVCVA0nfydkjdNxL1lWgAAA="
+  },
+  "nightIlluminated": {
+    "srcSetBase": "/assets/architecture/night-illuminated",
+    "widths": [
+      640,
+      960,
+      1376
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "width": 1376,
+    "height": 768,
+    "blurDataURL": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAADQAwCdASoYAA0APwlur0+rpiQiMAgBcCEJaACdIHACdhsjpAXK+aAA/ujvvv7p8q31EqzkEgB573yrvNvf6kaIdb2AxAwi7eFi2GMVHlg2UMqzpW/MzitKOMoZ20kiOdT7T1UuUXQO+vHoFOK3JnPz5nUhCUoUAAA="
+  }
+}

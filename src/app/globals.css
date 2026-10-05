@@ -1,26 +1,349 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ============================================================================
+   THE VERDE RESIDENCES — Design tokens
+   Swiss minimalism: zero radius, no shadows, no gradients.
+   Depth is created from scale, blur and luminance instead.
+   ========================================================================= */
+
+@theme {
+  /* --- Surface & ink ------------------------------------------------------ */
+  --color-ink: #0a0c0b;
+  --color-ink-raised: #121513;
+  --color-ink-sunken: #060807;
+
+  /* --- Identity: ivory concrete, bronze fins, blue-tinted glass, foliage -- */
+  --color-ivory: #f2efe9;
+  --color-ivory-dim: rgba(242, 239, 233, 0.62);
+  --color-ivory-faint: rgba(242, 239, 233, 0.38);
+  --color-bronze: #a68a64;
+  --color-bronze-dim: rgba(166, 138, 100, 0.55);
+  --color-glass: #2a3f52;
+  --color-verdant: #3f5b45;
+
+  /* --- Semantic ----------------------------------------------------------- */
+  --color-surface: var(--color-ink);
+  --color-text: var(--color-ivory);
+  --color-text-muted: var(--color-ivory-dim);
+  --color-accent: var(--color-bronze);
+  --color-focus: var(--color-ivory);
+  --color-hairline: rgba(242, 239, 233, 0.14);
+  --color-hairline-strong: rgba(242, 239, 233, 0.28);
+
+  /* --- Typography --------------------------------------------------------- */
+  --font-display: var(--font-bodoni), "Times New Roman", serif;
+  --font-sans: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+
+  /* --- Motion ------------------------------------------------------------- */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quint: cubic-bezier(0.83, 0, 0.17, 1);
+  --ease-architectural: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Spacing — 8px rhythm, spacious tier (density 2/10) */
+  --spacing: 0.25rem;
+
+  /* Motion durations */
+  --duration-micro: 180ms;
+  --duration-ui: 320ms;
+  --duration-reveal: 900ms;
+  --duration-cinematic: 1600ms;
+
+  /* Zero radius everywhere — Swiss minimalism */
+  --radius-none: 0px;
 }
 
-@media (prefers-color-scheme: dark) {
+:root {
+  /* Layout metrics */
+  --nav-h: 4.5rem;
+  --gutter: clamp(1.25rem, 5vw, 5.5rem);
+  --content-max: 100rem; /* 1600px */
+  --measure: 34ch;
+  --vh: 1vh;
+  --dvh: 1dvh;
+
+  color-scheme: dark;
+}
+
+/* ============================================================================
+   Reset
+   ========================================================================= */
+
+*,
+*::before,
+*::after {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+html {
+  /* Sticky navigation must never obscure keyboard focus (WCAG 2.2 — 2.4.11) */
+  scroll-padding-top: var(--nav-h);
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (min-width: 768px) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --nav-h: 5.5rem;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background-color: var(--color-ink);
+  color: var(--color-ivory);
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 0.98;
+  text-wrap: balance;
+  margin: 0;
+}
+
+p {
+  text-wrap: pretty;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+img,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* ============================================================================
+   Focus — visible on every interactive element, 2px at 3:1 (WCAG 2.2)
+   ========================================================================= */
+
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+/* Keyboard users must never have focus hidden behind the sticky navigation */
+html:has(:focus-visible) {
+  scroll-padding-top: calc(var(--nav-h) + 1rem);
+}
+
+/* ============================================================================
+   Typography primitives
+   ========================================================================= */
+
+@utility display-xl {
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 9vw, 8.5rem);
+  font-weight: 400;
+  line-height: 0.92;
+  letter-spacing: -0.025em;
+}
+
+@utility display-l {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 6vw, 5.5rem);
+  font-weight: 400;
+  line-height: 0.94;
+  letter-spacing: -0.022em;
+}
+
+@utility display-m {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3.6vw, 3rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.018em;
+}
+
+@utility display-s {
+  font-family: var(--font-display);
+  font-size: clamp(1.375rem, 2.2vw, 1.875rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.012em;
+}
+
+@utility eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-bronze);
+}
+
+@utility body-copy {
+  font-family: var(--font-sans);
+  font-size: clamp(0.9375rem, 1.1vw, 1.0625rem);
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--color-ivory-dim);
+  max-width: var(--measure);
+}
+
+@utility caption {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--color-ivory-dim);
+}
+
+@utility numeral {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================================
+   Layout primitives
+   ========================================================================= */
+
+@utility shell {
+  width: 100%;
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+@utility grid-12 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--gutter);
+}
+
+@media (min-width: 768px) {
+  .grid-12 {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-12 {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+}
+
+@utility hairline-t {
+  border-top: 1px solid var(--color-hairline);
+}
+
+@utility hairline-b {
+  border-bottom: 1px solid var(--color-hairline);
+}
+
+/**
+ * Text link with an underline that grows from the baseline on hover. Built as
+ * a utility rather than a component so it composes with any inline element.
+ */
+@utility link-underline {
+  color: var(--color-ivory);
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  transition:
+    background-size var(--duration-ui) var(--ease-out-expo),
+    color var(--duration-ui) var(--ease-out-expo);
+
+  &:hover,
+  &:focus-visible {
+    color: var(--color-bronze-dim);
+    background-size: 100% 1px;
+  }
+}
+
+/* ============================================================================
+   Accessibility utilities
+   ========================================================================= */
+
+@utility visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@utility skip-link {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  transform: translateY(-120%);
+  background: var(--color-ivory);
+  color: var(--color-ink);
+  padding: 0.875rem 1.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition: transform var(--duration-ui) var(--ease-out-expo);
+
+  &:focus,
+  &:focus-visible {
+    transform: translateY(0);
+    outline: 2px solid var(--color-bronze);
+    outline-offset: -2px;
+  }
+}
+
+/* ============================================================================
+   Reduced motion — content is never hidden, motion is only simplified
+   ========================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
