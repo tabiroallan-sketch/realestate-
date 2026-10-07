@@ -4,7 +4,7 @@ export function SiteFooter() {
   const year = 2026;
 
   return (
-    <footer className="relative border-t border-hairline bg-ink-sunken">
+    <footer className="relative border-t border-hairline bg-ink-sunken pb-16 lg:pb-0">
       <div className="shell py-[clamp(4rem,9vh,7rem)]">
         <div className="grid-12 gap-y-12">
           {/* Wordmark + statement */}

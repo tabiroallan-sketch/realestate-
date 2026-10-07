@@ -3,8 +3,8 @@
 import { useCallback, useState } from "react";
 
 import { Loader } from "@/components/chrome/Loader";
-import { CustomCursor } from "@/components/chrome/CustomCursor";
 import { ScrollProgress } from "@/components/chrome/ScrollProgress";
+import { WhatsAppBar } from "@/components/chrome/WhatsAppBar";
 import { criticalAssets } from "@/data/assets";
 import { useLenis } from "@/hooks/useLenis";
 import { JourneyCanvas } from "@/journey/JourneyCanvas";
@@ -31,7 +31,7 @@ export function Experience({ children }: { children: React.ReactNode }) {
       </a>
 
       <ScrollProgress />
-      <CustomCursor />
+      <WhatsAppBar />
 
       {/* The journey canvas is a fixed layer behind the content, mounted once and
           never unmounted — a second WebGL context would defeat the whole point of

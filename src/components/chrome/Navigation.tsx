@@ -50,10 +50,10 @@ export function Navigation() {
         <div
           className={cn(
             "relative transition-colors duration-[var(--duration-ui)] ease-[var(--ease-out-expo)]",
-            condensed || menuOpen
-              ? "bg-ink hairline-b"
-              : "bg-transparent border-b border-transparent",
-          )}
+              condensed || menuOpen
+                ? "bg-ink/95 backdrop-blur-md hairline-b"
+                : "bg-ink/60 backdrop-blur-sm border-b border-transparent",
+            )}
         >
           <div className="shell flex h-[var(--nav-h)] items-center justify-between gap-8">
             <Link
@@ -109,7 +109,7 @@ export function Navigation() {
                 href={navigationCta.href}
                 size="md"
                 withArrow
-                className="hidden border border-hairline-strong md:inline-flex"
+                className="hidden bg-bronze text-ink border-transparent hover:opacity-90 md:inline-flex"
               >
                 {navigationCta.label}
               </Button>

@@ -191,7 +191,7 @@ import { chapters, navigation, navigationCta } from "../src/data/navigation.ts";
 3. Every row: `floor` integer `1..architecture.storeys`; `type` ∈ `residenceTypes[].id`; `size` === that typology's `interior`; `priceValue` ≥ (number parsed from that typology's `range`, e.g. "From KES 5.4M" → 5.4); `status` ∈ `["Available", "On hold"]`; `price` starts with `"KES "`.
 4. `trust.founded` ≤ 2026; `trust.homes === 1240`; `trust.towersUnderConstruction === 6`.
 5. `/^https:\/\/wa\.me\/254\d{9}$/.test(site.whatsappBase)`; `site.hours` includes "09:00".
-6. Every `chapters[].id` and every `#`-target in `navigation[].href`, `navigationCta` (if `#`), and `hero.primaryCta/secondaryCta.href` ∈ declared section ids (`sections.*.id`).
+6. Every `chapters[].id` and every `#`-target in `navigation[].href`, `navigationCta` (if `#`), and `hero.primaryCta/secondaryCta.href` ∈ `sections.*.id` **∪ `{"hero"}`** (`hero` is the literal flight-section id, never a `sections` key — the same union `verify-anchors.mjs` accepts via rendered ids).
 7. `hero.secondaryCta` exists (value still `#masterplan` at this task — membership check only; it changes in Task 4).
 
 - [ ] **Step 2: Run it, verify it fails**

@@ -15,6 +15,8 @@ export const site = {
   phone: "+254 700 000 000",
   phoneHref: "tel:+254700000000",
   email: "sales@verderesidences.co.ke",
+  whatsappBase: "https://wa.me/254700000000",
+  hours: "Monday to Saturday, 09:00–18:00 EAT",
   address: {
     street: "Upper Hill Road",
     area: "Westlands",

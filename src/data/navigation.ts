@@ -11,8 +11,8 @@ export const navigation: NavItem[] = [
 ];
 
 export const navigationCta = {
-  label: "Private Viewing",
-  href: "#contact",
+  label: "WhatsApp",
+  href: "https://wa.me/254700000000",
 } as const;
 
 /**

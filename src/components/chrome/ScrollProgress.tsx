@@ -20,6 +20,7 @@ export function ScrollProgress() {
     <>
       {/* Mobile — minimal top rule */}
       <div
+        data-scroll-progress
         aria-hidden="true"
         className="fixed inset-x-0 top-0 z-95 h-0.5 bg-hairline lg:hidden"
       >

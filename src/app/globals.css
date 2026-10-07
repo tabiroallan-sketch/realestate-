@@ -9,15 +9,15 @@
 @theme {
   /* --- Surface & ink ------------------------------------------------------ */
   --color-ink: #0a0c0b;
-  --color-ink-raised: #121513;
+  --color-ink-raised: #10130f;
   --color-ink-sunken: #060807;
 
   /* --- Identity: ivory concrete, bronze fins, blue-tinted glass, foliage -- */
-  --color-ivory: #f2efe9;
-  --color-ivory-dim: rgba(242, 239, 233, 0.62);
-  --color-ivory-faint: rgba(242, 239, 233, 0.38);
-  --color-bronze: #a68a64;
-  --color-bronze-dim: rgba(166, 138, 100, 0.55);
+  --color-ivory: #e8e2d5;
+  --color-ivory-dim: rgba(232, 226, 213, 0.62);
+  --color-ivory-faint: rgba(232, 226, 213, 0.38);
+  --color-bronze: #b98a45;
+  --color-bronze-dim: rgba(185, 138, 69, 0.55);
   --color-glass: #2a3f52;
   --color-verdant: #3f5b45;
 
@@ -27,8 +27,10 @@
   --color-text-muted: var(--color-ivory-dim);
   --color-accent: var(--color-bronze);
   --color-focus: var(--color-ivory);
-  --color-hairline: rgba(242, 239, 233, 0.14);
-  --color-hairline-strong: rgba(242, 239, 233, 0.28);
+  --color-hairline: rgba(232, 226, 213, 0.12);
+  --color-hairline-strong: rgba(232, 226, 213, 0.28);
+  --color-muted: #8f897c;
+  --color-body: #a39d91;
 
   /* --- Typography --------------------------------------------------------- */
   --font-display: var(--font-bodoni), "Times New Roman", serif;

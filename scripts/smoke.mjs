@@ -189,6 +189,13 @@ for (const vp of VIEWPORTS) {
   if (vp.deep) {
     // --- Nav behaviour -----------------------------------------------------
     if (vp.width >= 1024) {
+      const bar = page.locator("[data-whatsapp-bar]");
+      const barVisible = await bar.isVisible();
+      if (barVisible === false) ok("sticky WhatsApp bar hidden on desktop");
+      else fail("sticky WhatsApp bar should be hidden on desktop");
+      const headerWa = page.locator('header a[href^="https://wa.me/"]');
+      if ((await headerWa.count()) >= 1) ok("header WhatsApp CTA present");
+      else fail(`expected header WhatsApp CTA, found ${await headerWa.count()}`);
       const cta = page.locator('nav[aria-label="Primary"] a', { hasText: "Residences" });
       if ((await cta.count()) === 1) ok("primary nav links present");
       else fail(`expected 1 primary nav Residences link, found ${await cta.count()}`);
@@ -197,6 +204,15 @@ for (const vp of VIEWPORTS) {
       // operating it — otherwise the trigger is genuinely off-screen.
       await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
       await page.waitForTimeout(600);
+
+      // Task 1: sticky WhatsApp bar
+      const bar = page.locator("[data-whatsapp-bar]");
+      const barVisibleMobile = await bar.isVisible();
+      if (barVisibleMobile) {
+        const href = await bar.getAttribute("href");
+        if (href?.startsWith("https://wa.me/")) ok("sticky WhatsApp bar visible with wa.me link");
+        else fail(`sticky bar href is "${href}"`);
+      } else fail("sticky WhatsApp bar not visible on mobile");
 
       const trigger = page.locator('button[aria-controls="mobile-menu"]');
       await trigger.evaluate((el) => el.scrollIntoView({ behavior: "instant", block: "center" }));
