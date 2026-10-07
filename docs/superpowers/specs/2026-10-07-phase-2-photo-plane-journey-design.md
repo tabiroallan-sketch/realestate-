@@ -91,10 +91,12 @@ Same fit/orientation math; `HTMLVideoElement` → `VideoTexture`, loop, muted,
 
 ### Transition mechanics
 
-- **Progress-driven windows.** Per plane, derived from neighboring waypoint `t` values:
-  fade-in over the last ~40% of the incoming leg, fade-out over the first ~35% of the
-  outgoing leg, overlapping with normalized opacity so two planes cross-blend — no black
-  gaps, no cuts. A short **hold** at each anchor keeps the image still for a beat.
+- **Progress-driven windows.** Across each leg `[A, B]` between consecutive beat
+  anchors: `s = smoothstep(A + 0.4·(B−A), B − 0.4·(B−A), t)`; the outgoing plane's
+  opacity is `1−s`, the incoming plane's is `s` — they sum to 1 everywhere, so two
+  planes cross-blend through the middle of the leg with no gap and no cut. Full-opacity
+  hold extends from each anchor 40% of the leg back and forward, so every image sits
+  still for a beat around its waypoint.
 - **Threshold fly-through.** Opacity ramps to 0 as camera-to-plane distance crosses
   near-clip + margin — entering lobby/rooftop photos is a pass-through, never a clip.
 - **Ken Burns.** `scale 1 → 1.04` across each hold, driven by progress; off under
@@ -137,8 +139,10 @@ The procedural gate (bronze/ivory/band-energy vs reference) is **retired** — t
 now *is* the photos. Replaced inside `scripts/compare-reference.mjs --gate`:
 
 1. **Photo match** — each captured waypoint frame vs its source image: downscaled
-   luminance/structure correlation ≥ threshold (starting target 0.8, tunable against
-   false failures). Proves the right photo fills the frame.
+   luminance/structure correlation ≥ 0.8 for the four still pairs. The aerial pair
+   compares a live video frame against the video's poster still, so it is held to
+   ≥ 0.5 — same check, looser floor, because the two frames are not identical by
+   construction.
 2. **Full-frame coverage** — corner patches must correlate with the source's corners and
    carry non-trivial luminance: catches misfitted planes, backdrop holes, black fallbacks.
 

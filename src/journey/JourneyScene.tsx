@@ -60,9 +60,13 @@ export function JourneyScene() {
       <TowerCluster />
       <WindowLights
         night={day}
-        towers={TOWERS.map((tower) => ({ x: tower.x, z: tower.z, w: tower.w, d: tower.d }))}
-        storeys={25}
-        bays={16}
+        towers={TOWERS.map((tower) => ({
+          x: tower.x,
+          z: tower.z,
+          w: tower.w,
+          d: tower.d,
+          storeys: tower.storeys,
+        }))}
         storeyHeight={STOREY_HEIGHT}
       />
       <City count={skyline} />

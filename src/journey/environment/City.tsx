@@ -158,11 +158,11 @@ export function Ground() {
         <primitive object={materials.pool} attach="material" />
       </mesh>
 
-      {/* Planted areas flanking the approach */}
+      {/* Planted areas flanking the approach — clear of the podium footprint */}
       {[
-        { position: [-36, 3.3, 18] as const, scale: [22, 0.3, 16] as const },
-        { position: [44, 3.3, 18] as const, scale: [20, 0.3, 16] as const },
-        { position: [4, 3.3, -22] as const, scale: [70, 0.3, 14] as const },
+        { position: [-36, 3.3, 25] as const, scale: [22, 0.3, 16] as const },
+        { position: [44, 3.3, 25] as const, scale: [20, 0.3, 16] as const },
+        { position: [4, 3.3, -27] as const, scale: [70, 0.3, 14] as const },
       ].map((lawn, index) => (
         <mesh key={index} position={lawn.position as unknown as [number, number, number]}>
           <boxGeometry args={lawn.scale as unknown as [number, number, number]} />

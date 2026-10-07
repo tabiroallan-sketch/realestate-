@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { gsap, ScrollTrigger, registerGsap } from "@/animations/gsap";
 import { scrub } from "@/animations/easing";
 import { JOURNEY_END_ID, JOURNEY_START_ID } from "@/journey/waypoints";
+import { journeyProbe } from "@/journey/probe";
 import { journey, resetJourney } from "@/journey/store";
 
 registerGsap();
@@ -36,6 +37,10 @@ export function useScrollProgress() {
       end: "bottom bottom",
       scrub: scrub.cinematic,
       onUpdate: (self) => {
+        // The probe drives the flight directly and needs the camera to stay put
+        // while it measures; without this the scrub pulls the value straight back
+        // to the document's scroll position.
+        if (journeyProbe.hold) return;
         journey.progress.value = self.progress;
         journey.progress.active = true;
       },

@@ -51,3 +51,6 @@ next-env.d.ts
 # scripts/build-video.mjs derive them from these files. Nothing in the build
 # reads image/, so tracking it would only bloat the repository.
 /image/
+
+# superpowers session/plan workspace
+/.superpowers/

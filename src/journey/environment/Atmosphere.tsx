@@ -37,7 +37,7 @@ export function Atmosphere({
     // shadow maps, and a facade in Nairobi's light is legible without one.
     sun.castShadow = false;
 
-    const ambient = new THREE.HemisphereLight("#cfe0ea", PALETTE.ground, 0.85);
+    const ambient = new THREE.HemisphereLight("#cfe0ea", PALETTE.ground, 1.2);
 
     // Scratch colours, allocated once. Interpolating between fresh
     // `THREE.Color` instances every frame would allocate ~150 objects a second
@@ -68,7 +68,7 @@ export function Atmosphere({
     sun.color.lerpColors(colors.sunDay, colors.sunNight, state.night);
     sun.intensity = 2.4 * (1 - state.night * 0.82);
 
-    ambient.intensity = 0.85 * (1 - state.night * 0.68);
+    ambient.intensity = 1.2 * (1 - state.night * 0.68);
   });
 
   return (

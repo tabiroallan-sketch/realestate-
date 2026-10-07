@@ -4,7 +4,7 @@
 > cinematic experience. Phases 1–10, each gated on verification.
 
 **Created:** 2026-10-05
-**Status:** Phase 1 in progress
+**Status:** Phase 2 complete + reference gate GREEN — human adjudication of side-by-sides before Phase 3
 
 ---
 
@@ -406,9 +406,73 @@ Gate evidence:
 - Playwright's actionability helpers had to be replaced with direct DOM scrolling in
   `smoke.mjs` — a continuously animating WebGL layer never satisfies the "stable element" wait.
 
-Still outstanding: the procedural towers have not been compared against the reference stills
-(see risk 1 below). That comparison needs a human eye before Phase 3 builds further on the
-massing.
+**Reference comparison (risk 1) — DONE, verdict: not yet the same buildings.**
+Captured the 5 exterior waypoints via the `?journeyProbe=1` seam
+(`scripts/capture-reference.mjs`) and measured them against the reference stills
+(`scripts/compare-reference.mjs`; method: vertical-derivative structure detection,
+fixed thresholds for both sides, white-balance control for photo grade). Evidence:
+
+- **Materials** — render towers are ivory + glass; references are bronze-dominant.
+  Cleanest pairs (cool-graded refs, grade working *against* the finding):
+  aerial 29% bronze (ref) vs 5% (render), night 22% vs 4%; entrance glass 43%
+  (render) vs 12% (ref). Ivory runs 23–31% in renders vs 0–8% in references.
+- **Facade articulation** — reference balcony banding is strong and regular at
+  every distance (aerial pitch 29px, r≈0.93, energy ≈1500). The render's banding
+  collapses with distance (aerial pitch incoherent, energy ≈120 — 10× weaker);
+  only the night close-up bands properly (pitch 26–27px, r≈0.9 → 22 storeys,
+  self-validating `TOWER_STOREYS`).
+- **Hero/development framing** — reference towers occupy ~2× the frame width and
+  reach within 5–10% of frame top; render towers are half as wide, tops at
+  16–39%. Possibly intentional for "far aerial" — human adjudication required.
+
+Side-by-side composites for the human pass: `scripts/screenshots/reference/side-by-side/*.png`.
+Caveats: photo noise fragments reference column runs (run counts and `impliedFloors`
+unreliable); white-balance control can manufacture bronze from neutral pixels, so
+bronze conclusions rest on the cool-graded pairs + raw numbers.
+**Corrections (materials, band contrast, framing review) must land before Phase 3.**
+
+**Corrections pass — REFERENCE GATE GREEN (6/6).** Verified with
+`node scripts/capture-reference.mjs` → `node scripts/compare-reference.mjs --gate`:
+
+- `TowerCluster` rewritten — elliptical cores with full facade articulation on all four
+  faces: per-storey perimeter rings (bronze spandrel / ivory balcony slab / teal glazing /
+  dark reveal), full-height radial bronze fins, crown parapet, podium plinth with colonnade;
+  6 instanced meshes.
+- `WindowLights` re-gridded onto each tower's ellipse at its own storey count (tower C no
+  longer floats panes above its roofline).
+- Lighting/materials: hemisphere 0.85 → 1.2, spandrel metalness 0.2 → 0.1, fins 0.5 → 0.15 —
+  shadow-facing facade faces now land in the bronze bucket instead of collapsing to "dark"
+  (no env map; high metalness renders near-black).
+- Framing: WP01 aerial → `position [-115,60,130] target [0,37,0] fov 40`. Camera sits below
+  the tallest roofline so all three towers rise above the horizon and reach 5–10% of frame
+  top, matching the poster.
+- **Detector correction (applies to both sides alike):** `columnTops` box-smooths 5 rows
+  before differencing. Real-time renders cliff in 1–2px; photographs blur over many rows.
+  A single raw-derivative rule could not see both. At a 5-row scale both are detectable and
+  sky gradients still sit far below threshold.
+- `scripts/journey.mjs`: hygiene checks + final screenshot + primary-context close moved
+  ahead of the reduced-motion/fallback/mobile sections — two software WebGL contexts in one
+  renderer starved the reduced-motion mount past its 60s timeout (and made the hidden-fps
+  baseline check read 39 vs 59).
+
+Gate evidence (caps are the gate; reference values are context):
+
+| Check | Result | Cap | Reference |
+|---|---|---|---|
+| aerial bronze | 27% | ≥ 15% | 18% |
+| night bronze | 20% | ≥ 15% | 23% |
+| aerial band energy | 593 | ≥ 500 | 962–1749 |
+| aerial ivory | 9% | ≤ 20% | 7% |
+| widest tower run | 149px | ≥ 70px | 85–122px |
+| tower top | 7% | ≤ 20% | 5–10% |
+
+- `npm run verify` (anchors · typecheck · lint · build) green. `npm run verify:journey`
+  green — 30 checks, worst waypoint accuracy 0.39 units (`approach`).
+- Composites regenerated → `scripts/screenshots/reference/side-by-side/`.
+- **Open for human adjudication:** towers ~20% wider in frame than the poster (149px vs
+  85–122px — slimming `TOWERS` widths is the lever); band energy 593 vs ~1500 (banding
+  reads real but softer than the photograph); rooftop waypoint renders darker than its
+  reference (not gated).
 
 ### Phase 3 — Cinematic story
 Development · Entrance · Lobby · Residence · Living Room · Balcony · Rooftop.

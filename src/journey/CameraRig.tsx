@@ -1,13 +1,14 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
 import { easeInOutSine } from "@/animations/easing";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { enableJourneyProbe, journeyProbe } from "@/journey/probe";
 import { journey } from "@/journey/store";
-import { WAYPOINTS, type Waypoint } from "@/journey/waypoints";
+import { authoredToU, WAYPOINTS, type Waypoint } from "@/journey/waypoints";
 
 /**
  * The single owner of camera state.
@@ -53,6 +54,10 @@ export function CameraRig() {
   // about.
   const cameraRef = useRef(camera);
 
+  useEffect(() => {
+    enableJourneyProbe();
+  }, []);
+
   /**
    * Map curve parameter t to a field of view by interpolating between the
    * nearest waypoint stops. Sampling the curve directly cannot express this:
@@ -89,8 +94,14 @@ export function CameraRig() {
       return;
     }
 
-    positionCurve.getPointAt(t, target.desiredPosition);
-    targetCurve.getPointAt(t, target.desiredTarget);
+    // `getPoint`, not `getPointAt`. `getPointAt` re-parameterises by arc length,
+    // which makes t mean "fraction of path distance" and silently discards the
+    // authored `t` weights in WAYPOINTS. `authoredToU` maps the authored value
+    // onto the curve's own parameter so t means "fraction of the waypoint
+    // sequence", which is what the data says it means.
+    const u = authoredToU(t);
+    positionCurve.getPoint(u, target.desiredPosition);
+    targetCurve.getPoint(u, target.desiredTarget);
 
     // Pointer parallax is a small offset perpendicular to the view direction,
     // not a translation along world axes — otherwise it swings the frame
@@ -112,6 +123,22 @@ export function CameraRig() {
     view.lookAt(target.lookAt);
 
     applyFov(view, fovAt(t));
+
+    // Reported after damping, so the probe measures where the camera actually
+    // settled rather than where it was asked to go.
+    if (journeyProbe.enabled) {
+      journeyProbe.frame += 1;
+      journeyProbe.t = t;
+      journeyProbe.desired.x = target.desiredPosition.x;
+      journeyProbe.desired.y = target.desiredPosition.y;
+      journeyProbe.desired.z = target.desiredPosition.z;
+      journeyProbe.target.x = target.desiredTarget.x;
+      journeyProbe.target.y = target.desiredTarget.y;
+      journeyProbe.target.z = target.desiredTarget.z;
+      journeyProbe.camera.x = view.position.x;
+      journeyProbe.camera.y = view.position.y;
+      journeyProbe.camera.z = view.position.z;
+    }
   });
 
   return null;

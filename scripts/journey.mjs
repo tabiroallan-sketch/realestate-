@@ -11,7 +11,11 @@
  */
 import { chromium } from "playwright";
 import { createHash } from "node:crypto";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const BASE = process.env.BASE_URL ?? "http://localhost:3000";
 
 const browser = await chromium.launch({
@@ -209,6 +213,21 @@ check(
   `resumed=${resumedFps.fps}fps visible=${visibleFps.fps}fps`,
 );
 
+/* -- hygiene --------------------------------------------------------------- */
+
+check("no console errors", consoleErrors.length === 0, consoleErrors.slice(0, 3).join(" | "));
+check("no failed requests", failedRequests.length === 0, failedRequests.slice(0, 3).join(" | "));
+
+await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+await page.waitForTimeout(1200);
+await page.screenshot({ path: "scripts/screenshots/phase2-journey.png" });
+
+// The primary page has served its purpose. Closing its WebGL context before the
+// remaining sections matters: two software-rendered contexts in the same
+// renderer starve each other enough that the reduced-motion page alone takes
+// over a minute to mount its canvas.
+await context.close();
+
 /* -- reduced motion -------------------------------------------------------- */
 
 const reducedContext = await browser.newContext({
@@ -304,14 +323,95 @@ check("no horizontal overflow on mobile", mobileOverflow <= 0, `overflow=${mobil
 await mobilePage.screenshot({ path: "scripts/screenshots/phase2-mobile.png" });
 await mobileContext.close();
 
-/* -- hygiene --------------------------------------------------------------- */
+/* -- camera lands where the data says ---------------------------------------
+ *
+ * The strongest claim this site makes about its camera is that the authored `t`
+ * values mean something. If the rig samples the flight by arc length rather than
+ * by waypoint, the authored weights are silently discarded and the camera drifts
+ * up to 20% of the journey away from the waypoint it was composed for — which no
+ * screenshot of the flight reveals, because the flight still looks like a smooth
+ * camera move either way.
+ *
+ * So this stands the camera at each authored `t` and measures it against the
+ * authored position. The seam exposes a frame counter because software rendering
+ * runs at roughly 4fps: polling on wall-clock alone can read a frame from before
+ * the requested `t` was ever sampled, which reads as tens of units of error that
+ * does not exist.
+ * -------------------------------------------------------------------------- */
 
-check("no console errors", consoleErrors.length === 0, consoleErrors.slice(0, 3).join(" | "));
-check("no failed requests", failedRequests.length === 0, failedRequests.slice(0, 3).join(" | "));
+const waypointSource = await readFile(
+  path.join(ROOT, "src", "journey", "waypoints.ts"),
+  "utf8",
+);
 
-await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
-await page.waitForTimeout(1200);
-await page.screenshot({ path: "scripts/screenshots/phase2-journey.png" });
+const authoredWaypoints = [
+  ...waypointSource.matchAll(
+    /id:\s*"([^"]+)",\s*position:\s*\[\s*(-?[\d.]+),\s*(-?[\d.]+),\s*(-?[\d.]+)\s*\],[\s\S]*?fov:\s*([\d.]+),\s*t:\s*([\d.]+)/g,
+  ),
+].map(([, id, x, y, z, fov, t]) => ({
+  id,
+  position: [Number(x), Number(y), Number(z)],
+  fov: Number(fov),
+  t: Number(t),
+}));
+
+check(
+  "waypoints parsed from source",
+  authoredWaypoints.length >= 9,
+  `${authoredWaypoints.length} found`,
+);
+
+const probeContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+const probePage = await probeContext.newPage();
+const probeErrors = [];
+probePage.on("pageerror", (e) => probeErrors.push(e.message));
+probePage.on("console", (m) => {
+  if (m.type() === "error") probeErrors.push(m.text());
+});
+
+await probePage.goto(`${BASE}/?journeyProbe=1`, { waitUntil: "domcontentloaded" });
+await probePage.waitForSelector("[data-journey-canvas] canvas", {
+  state: "attached",
+  timeout: 60_000,
+});
+await probePage.waitForTimeout(2500);
+
+const cameraMarks = [];
+
+for (const w of authoredWaypoints) {
+  await probePage.evaluate((t) => window.__forceProgress(t), w.t);
+  const startFrame = await probePage.evaluate(() => window.__journeyProbe.frame);
+
+  let reading = { frame: startFrame, camera: { x: 0, y: 0, z: 0 } };
+  try {
+    // Twelve frames is well past damping convergence at 4.2/s.
+    await probePage.waitForFunction(
+      (from) => window.__journeyProbe.frame - from >= 12,
+      startFrame,
+      { timeout: 30_000, polling: 100 },
+    );
+    reading = await probePage.evaluate(() => ({
+      frame: window.__journeyProbe.frame,
+      camera: { ...window.__journeyProbe.camera },
+    }));
+  } catch {
+    // Left at the zero reading; the assertion below reports it as a miss.
+  }
+
+  const [wx, wy, wz] = w.position;
+  const off = Math.hypot(reading.camera.x - wx, reading.camera.y - wy, reading.camera.z - wz);
+  cameraMarks.push({ id: w.id, t: w.t, off });
+
+  check(`camera lands on ${w.id}`, off <= 1, `t=${w.t} off=${off.toFixed(2)} units`);
+}
+
+const worstMark = cameraMarks.reduce((a, b) => (b.off > a.off ? b : a));
+console.log(
+  `info  waypoint accuracy — worst ${worstMark.id} at ${worstMark.off.toFixed(2)} units`,
+);
+
+check("probe raised no errors", probeErrors.length === 0, probeErrors.slice(0, 2).join(" | "));
+await probeContext.close();
 
 await browser.close();
 

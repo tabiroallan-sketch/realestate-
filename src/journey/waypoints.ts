@@ -33,15 +33,15 @@ export type Waypoint = {
 export const WAYPOINTS: Waypoint[] = [
   {
     id: "aerial",
-    position: [-210, 132, 232],
-    target: [0, 46, 0],
-    fov: 46,
+    position: [-115, 60, 130],
+    target: [0, 37, 0],
+    fov: 40,
     t: 0,
     label: "Far aerial — establishing scale",
   },
   {
     id: "approach",
-    position: [-128, 84, 158],
+    position: [-64, 46, 80],
     target: [-6, 38, 4],
     fov: 44,
     t: 0.14,
@@ -104,6 +104,42 @@ export const WAYPOINTS: Waypoint[] = [
     label: "Masterplan — pull back to the site",
   },
 ];
+
+/**
+ * Map an authored `t` onto the curve's own parameter.
+ *
+ * `THREE.CatmullRomCurve3.getPoint(u)` treats `u` as a fraction of the *waypoint
+ * sequence* — 0.5 is the midpoint between points 4 and 5. `getPointAt(u)` instead
+ * re-parameterises by arc length, so 0.5 is the point 394 units along a 788-unit
+ * path. Those are different numbers, and they only coincide when every segment
+ * happens to be the same length.
+ *
+ * `WAYPOINTS[].t` is authored as the waypoint sequence, with deliberately uneven
+ * spacing: the aerial establishing shots get more scroll than the threshold,
+ * which the camera should pass through quickly. Sampling with `getPointAt`
+ * therefore does not just shift the camera — it throws the authored weights away.
+ * Measured drift before this existed: the camera stood 136.8 units from the
+ * authored balcony waypoint and 154.0 units from the rooftop, 20.4% of the
+ * journey. That is invisible on an exterior fly-past and fatal the moment a shot
+ * has to be composed against a specific building.
+ *
+ * This remap is the whole fix: preserve the authored weights, sample by parameter.
+ */
+export function authoredToU(t: number): number {
+  const clamped = t < 0 ? 0 : t > 1 ? 1 : t;
+  const last = WAYPOINTS.length - 1;
+
+  for (let i = 0; i < last; i += 1) {
+    const a = WAYPOINTS[i].t;
+    const b = WAYPOINTS[i + 1].t;
+    if (clamped >= a && clamped <= b) {
+      const local = b === a ? 0 : (clamped - a) / (b - a);
+      return (i + local) / last;
+    }
+  }
+
+  return 1;
+}
 
 /** Which chapters drive the canvas. The canvas spans 01 → 08. */
 export const JOURNEY_START_ID = "hero";
