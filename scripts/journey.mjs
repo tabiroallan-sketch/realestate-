@@ -104,9 +104,13 @@ async function scrollTo(y) {
   await page.waitForTimeout(1600);
 }
 
-const docHeight = await page.evaluate(() => document.documentElement.scrollHeight);
-const mid = Math.round(docHeight * 0.45);
-const late = Math.round(docHeight * 0.85);
+const flight = await page.evaluate(() => {
+  const el = document.getElementById("hero");
+  const r = el.getBoundingClientRect();
+  return { top: r.top + window.scrollY, height: el.offsetHeight };
+});
+const mid = Math.round(flight.top + flight.height * 0.55);
+const late = Math.round(flight.top + flight.height - 900); // last viewport of the flight → progress 1
 
 await scrollTo(0);
 const frameHero = await fingerprint(page);

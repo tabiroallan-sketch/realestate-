@@ -1,7 +1,7 @@
 import { SiteFooter } from "@/components/chrome/SiteFooter";
+import { FlightShell } from "@/components/journey/FlightShell";
 import { Development } from "@/components/journey/sections/Development";
 import { EditorialChapter } from "@/components/journey/sections/EditorialChapter";
-import { Hero } from "@/components/journey/sections/Hero";
 import { sections } from "@/data/site";
 
 /**
@@ -17,7 +17,7 @@ import { sections } from "@/data/site";
 export default function Home() {
   return (
     <>
-      <Hero />
+      <FlightShell />
 
       <Development />
 

@@ -141,9 +141,9 @@ export function authoredToU(t: number): number {
   return 1;
 }
 
-/** Which chapters drive the canvas. The canvas spans 01 → 08. */
+/** Which chapters drive the canvas. The canvas spans the flight section. */
 export const JOURNEY_START_ID = "hero";
-export const JOURNEY_END_ID = "day-night";
+export const JOURNEY_END_ID = "hero";
 
 /** Waypoint each chapter settles on, used by reduced-motion snapping. */
 export const CHAPTER_WAYPOINT: Record<string, string> = {
