@@ -12,9 +12,9 @@ export function WhatsAppBar() {
       rel="noopener noreferrer"
       data-whatsapp-bar
       aria-label="Contact sales on WhatsApp"
-      className="fixed inset-x-0 bottom-0 z-80 lg:hidden pb-[env(safe-area-inset-bottom)]"
+      className="fixed inset-x-0 bottom-0 z-80 lg:hidden bg-bronze pb-[env(safe-area-inset-bottom)]"
     >
-      <div className="flex h-14 items-center justify-center gap-2 bg-bronze text-ink">
+      <div className="flex h-14 items-center justify-center gap-2 text-ink">
         <span className="font-sans text-[0.75rem] font-medium uppercase tracking-[0.16em]">
           WhatsApp Sales
         </span>

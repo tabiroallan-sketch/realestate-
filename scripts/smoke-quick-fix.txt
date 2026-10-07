@@ -1,0 +1,8 @@
+
+desktop 1440x900 @2x
+  ok    loader exits without user interaction
+  ok    hero photograph fills viewport (1440px)
+  ok    hero photograph decoded (naturalWidth 1440)
+  ok    hero served as avif
+  ok    h1 reads "The Verde Residences — Live Above The Ordinary. Nairobi, Kenya"
+  ok    no horizontal overflow

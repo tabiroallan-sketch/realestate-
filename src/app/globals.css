@@ -18,8 +18,6 @@
   --color-ivory-faint: rgba(232, 226, 213, 0.38);
   --color-bronze: #b98a45;
   --color-bronze-dim: rgba(185, 138, 69, 0.55);
-  --color-glass: #2a3f52;
-  --color-verdant: #3f5b45;
 
   /* --- Semantic ----------------------------------------------------------- */
   --color-surface: var(--color-ink);

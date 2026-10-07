@@ -1,0 +1,24 @@
+﻿
+desktop 1440x900 @2x
+node : node:internal/modules/run_main:107
+At line:1 char:58
++ ... ate-ineractive; $output = node scripts/smoke.mjs --quick 2>&1 | Out-F ...
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (node:internal/modules/run_main:107:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+    triggerUncaughtException(
+    ^
+
+page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3000/
+Call log:
+[2m  - navigating to "http://127.0.0.1:3000/", waiting until "networkidle"[22m
+
+    at C:\Users\PC\Desktop\real-estate-ineractive\scripts\smoke.mjs:114:14 {
+  log: [
+    '  - navigating to "http://127.0.0.1:3000/", waiting until "networkidle"'
+  ],
+  name: 'Error'
+}
+
+Node.js v24.15.0

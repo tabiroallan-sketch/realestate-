@@ -21,26 +21,3 @@ mobile 375x812 @3x
   ok    hero served as avif
   ok    h1 reads "The Verde Residences — Live Above The Ordinary. Nairobi, Kenya"
   ok    no horizontal overflow
-  ok    all 13 chapters reachable by anchor
-  ok    sticky WhatsApp bar visible with wa.me link
-  ok    mobile menu opens
-  ok    page scroll locked behind menu
-  ok    focus moved into the menu panel
-  ok    scroll lock released on close
-  ok    focus returned to the trigger
-  ok    no console errors
-  ok    no uncaught exceptions
-  ok    no failed requests
-
-reduced-motion
-  ok    all development content visible under prefers-reduced-motion
-
-webgl-disabled
-  ok    headline still readable without WebGL
-  ok    all 13 chapters present without WebGL
-  ok    hero photograph still decodes without WebGL
-  ok    no console errors without WebGL
-  ok    no failed requests without WebGL
-
-================================================================
-SMOKE PASSED
