@@ -136,6 +136,18 @@ export const sections = {
     primaryCta: "Request A Private Viewing",
     secondaryCta: "Download Brochure",
   },
+  availability: {
+    id: "availability",
+    eyebrow: "Availability",
+    headline: "37 Of 84 Still Available.",
+    body: "A snapshot as of October 2026 — six representative units below. Current pricing, floor-by-floor inventory and payment terms are confirmed on WhatsApp.",
+  },
+  trust: {
+    id: "trust",
+    eyebrow: "The Developer",
+    headline: "Building In Nairobi Since 2009.",
+    body: "Verde Development Partners has handed over 1,240 homes across six completed projects. Six towers are under construction today.",
+  },
 } as const;
 
 export const residenceTypes = [
@@ -172,6 +184,27 @@ export const residenceTypes = [
     note: "Full-floor living with a wraparound terrace and private plunge pool.",
   },
 ] as const;
+
+export const availability = {
+  total: 84,
+  remaining: 37,
+  asOf: "October 2026",
+  rows: [
+    { unit: "A-0402", type: "studio", floor: 4, size: "48 m²", price: "KES 5.4M", priceValue: 5.4, status: "Available" },
+    { unit: "B-0905", type: "one-bed", floor: 9, size: "86 m²", price: "KES 9.2M", priceValue: 9.2, status: "Available" },
+    { unit: "C-1103", type: "two-bed", floor: 11, size: "132 m²", price: "KES 14.5M", priceValue: 14.5, status: "On hold" },
+    { unit: "A-1504", type: "one-bed", floor: 15, size: "86 m²", price: "KES 9.6M", priceValue: 9.6, status: "Available" },
+    { unit: "B-1802", type: "two-bed", floor: 18, size: "132 m²", price: "KES 15.1M", priceValue: 15.1, status: "Available" },
+    { unit: "C-2101", type: "penthouse", floor: 21, size: "284 m²", price: "KES 38M", priceValue: 38, status: "Available" },
+  ],
+} as const;
+
+export const trust = {
+  founded: 2009,
+  homes: 1240,
+  completedProjects: 6,
+  towersUnderConstruction: 6,
+} as const;
 
 export const amenitiesList = [
   {
