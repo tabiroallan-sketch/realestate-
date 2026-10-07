@@ -13,8 +13,8 @@ import { JourneyCanvas } from "@/journey/JourneyCanvas";
  * Client shell for the whole experience.
  *
  * Sequencing matters: the loader blocks, smooth scroll is only enabled once the
- * loader has exited, and the cursor plus scroll rail only mount afterwards so
- * they never render behind the loading screen.
+ * loader has exited, and the scroll rail only mounts afterwards so
+ * it never renders behind the loading screen.
  */
 export function Experience({ children }: { children: React.ReactNode }) {
   const [revealed, setRevealed] = useState(false);
