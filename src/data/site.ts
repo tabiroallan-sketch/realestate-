@@ -51,7 +51,7 @@ export const hero = {
   eyebrow: `${site.shortName.toUpperCase()} — ${site.location.toUpperCase()}`,
   headline: site.tagline,
   primaryCta: { label: "Explore Residences", href: "#residences" },
-  secondaryCta: { label: "View Masterplan", href: "#masterplan" },
+  secondaryCta: { label: "View Availability", href: "#availability" },
   scrollHint: "Scroll to enter",
 } as const;
 
@@ -61,55 +61,6 @@ export const sections = {
     eyebrow: "The Development",
     headline: "Architecture That Belongs Here.",
     body: "Three interconnected towers shaped by the way light falls across the Nairobi plateau. Curved ivory balconies step back from blue-tinted glass, screened by bronze fins that shift through the day.",
-  },
-  lobby: {
-    id: "lobby",
-    eyebrow: "Arrival",
-    headline: "Designed Around You.",
-    body: "A lobby composed around light, air and quiet. Twenty-four-hour concierge, a wellness floor, private security and communal rooms finished in the same stone and bronze as the towers above.",
-    points: ["24-hour concierge", "Wellness floor", "Private security", "Communal salons"],
-  },
-  residence: {
-    id: "residence",
-    eyebrow: "The Residence",
-    headline: "A Home That Frames The City.",
-    body: "Every residence is organised around a single panoramic elevation. Deep balcony reveals temper the sun; full-height glazing draws the skyline into the room.",
-  },
-  balcony: {
-    id: "balcony",
-    eyebrow: "The View",
-    overlay: "Panoramic City Views",
-    headline: "The City. Your Horizon.",
-  },
-  rooftop: {
-    id: "rooftop",
-    eyebrow: "Sky Amenities",
-    headline: "Twenty-Two Floors Above It All.",
-    body: "An infinity pool held against the skyline, a rooftop lounge for small gatherings, and gardens planted to soften the city horizon.",
-  },
-  dayNight: {
-    id: "day-night",
-    eyebrow: "Through The Day",
-    headline: "As The Light Turns, The City Answers.",
-    body: "From open sky at dawn to warm stone at dusk, to bronze-lit towers at night. The development is lit to change character without ever losing its calm.",
-    states: [
-      { label: "Day", time: "09:00" },
-      { label: "Golden Hour", time: "17:40" },
-      { label: "Dusk", time: "18:35" },
-      { label: "Night", time: "21:10" },
-    ],
-  },
-  exploded: {
-    id: "architecture",
-    eyebrow: "The Architecture",
-    headline: "Built In Layers.",
-    body: "The tower separates into the parts that make it work: residences, wellness, sky amenities and rooftop, each stacked on the structure below.",
-  },
-  masterplan: {
-    id: "masterplan",
-    eyebrow: "Masterplan",
-    headline: "A Site That Breathes.",
-    body: "Three towers held within landscaped gardens, connected by shaded pedestrian paths and set back from the road behind a reflecting pool.",
   },
   residences: {
     id: "residences",
@@ -130,11 +81,9 @@ export const sections = {
   },
   contact: {
     id: "contact",
-    eyebrow: "Private Viewing",
-    headline: "Your New Perspective Awaits.",
-    body: "Viewings are held by appointment at the sales gallery on Upper Hill Road, and at the development itself once construction reaches Level 08.",
-    primaryCta: "Request A Private Viewing",
-    secondaryCta: "Download Brochure",
+    eyebrow: "Enquire",
+    headline: "Book A Viewing.",
+    body: `Sales gallery on Upper Hill Road, Westlands. Open ${site.hours}. Viewings by appointment; construction tours once the towers pass Level 08.`,
   },
   availability: {
     id: "availability",

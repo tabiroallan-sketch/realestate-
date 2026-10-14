@@ -1,1 +1,3 @@
-4 elements still hidden under prefers-reduced-motion
+availability rows: 0
+nav missing #availability link
+availability rows: 0

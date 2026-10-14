@@ -6,8 +6,8 @@ export type NavItem = {
 export const navigation: NavItem[] = [
   { label: "Residences", href: "#residences" },
   { label: "Amenities", href: "#amenities" },
-  { label: "Location", href: "#location" },
-  { label: "Masterplan", href: "#masterplan" },
+  { label: "Availability", href: "#availability" },
+  { label: "Contact", href: "#contact" },
 ];
 
 export const navigationCta = {
@@ -27,17 +27,12 @@ export type Chapter = {
 };
 
 export const chapters: Chapter[] = [
-  { id: "hero", index: "01", label: "Arrival" },
+  { id: "hero", index: "01", label: "The Flight" },
   { id: "development", index: "02", label: "The Development" },
-  { id: "lobby", index: "03", label: "Arrival & Lobby" },
-  { id: "residence", index: "04", label: "The Residence" },
-  { id: "balcony", index: "05", label: "The Balcony" },
-  { id: "rooftop", index: "06", label: "Rooftop" },
-  { id: "day-night", index: "07", label: "Day To Night" },
-  { id: "architecture", index: "08", label: "The Architecture" },
-  { id: "masterplan", index: "09", label: "Masterplan" },
-  { id: "residences", index: "10", label: "Residence Collection" },
-  { id: "amenities", index: "11", label: "Amenities" },
-  { id: "location", index: "12", label: "Location" },
-  { id: "contact", index: "13", label: "Private Viewing" },
+  { id: "residences", index: "03", label: "Residences" },
+  { id: "amenities", index: "04", label: "Amenities" },
+  { id: "location", index: "05", label: "Location" },
+  { id: "availability", index: "06", label: "Availability" },
+  { id: "trust", index: "07", label: "The Developer" },
+  { id: "contact", index: "08", label: "Enquire" },
 ];

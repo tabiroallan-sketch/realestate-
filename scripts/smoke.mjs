@@ -246,9 +246,17 @@ for (const vp of VIEWPORTS) {
         const triggerEl = document.querySelector('button[aria-controls="mobile-menu"]');
         return triggerEl === document.activeElement;
       });
-      if (focusReturned) ok("focus returned to the trigger");
+      if (focusReturned) ok("focus returned to the trigger after close");
       else fail("focus not returned to the trigger after close");
     }
+
+    // funnel contract
+    const rows = await page.locator("#availability [data-availability-row]").count();
+    if (rows >= 5 && rows <= 8) ok(`availability rows: ${rows}`); else fail(`availability rows: ${rows}`);
+    const waLinks = await page.locator('#availability a[href^="https://wa.me/"]').count();
+    if (waLinks === rows) ok("every availability row links to WhatsApp"); else fail(`${waLinks} wa.me links for ${rows} rows`);
+    const navHasAvailability = await page.locator('nav[aria-label="Primary"] a[href="#availability"]').count();
+    if (vp.width >= 1024) { navHasAvailability === 1 ? ok("nav links Availability") : fail("nav missing #availability link"); }
   }
 
   // --- Error tally ---------------------------------------------------------
