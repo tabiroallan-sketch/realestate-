@@ -198,7 +198,13 @@ export function VideoPlane({ src, poster, beatIndex, depth }: VideoPlaneProps) {
   });
 
   return (
-    <mesh ref={meshRef} position={pose.position} visible={false} frustumCulled={false}>
+    <mesh
+      ref={meshRef}
+      position={pose.position}
+      quaternion={pose.quaternion}
+      visible={false}
+      frustumCulled={false}
+    >
       <planeGeometry args={[pose.width, pose.height]} />
       <meshBasicMaterial
         ref={materialRef}

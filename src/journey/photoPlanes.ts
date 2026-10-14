@@ -143,6 +143,7 @@ export function planePose(
   position: [number, number, number];
   height: number;
   width: number;
+  quaternion: [number, number, number, number];
 } {
   const anchor = anchors[beatIndex];
   const pos = anchor.position;
@@ -162,7 +163,26 @@ export function planePose(
   ];
   const height = planeHeight(d, anchor.fov);
   const width = planeWidth(d, anchor.fov);
-  return { position, height, width };
+  return { position, height, width, quaternion: facingQuaternion(pos, position) };
+}
+
+function facingQuaternion(
+  arrival: readonly [number, number, number],
+  position: readonly [number, number, number],
+): [number, number, number, number] {
+  const dx = arrival[0] - position[0];
+  const dy = arrival[1] - position[1];
+  const dz = arrival[2] - position[2];
+  const len = Math.hypot(dx, dy, dz);
+  const nz = len > 0 ? dz / len : 1;
+  const ny = len > 0 ? dy / len : 0;
+  const nx = len > 0 ? dx / len : 0;
+  const w = 1 + nz;
+  if (w < 1e-9) return [1, 0, 0, 0];
+  const x = -ny;
+  const y = nx;
+  const qlen = Math.hypot(x, y, w);
+  return [x / qlen, y / qlen, 0, w / qlen];
 }
 
 export function planeOpacity(weight: number, distanceToCamera: number): number {

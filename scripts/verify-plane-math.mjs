@@ -163,6 +163,26 @@ for (let i = 0; i < poseAnchors.length; i += 1) {
     console.error(`FAIL  planePose height at ${i}`);
     process.exit(1);
   }
+  const q = pose.quaternion;
+  const qlen = Math.hypot(q[0], q[1], q[2], q[3]);
+  if (Math.abs(qlen - 1) > 1e-9) {
+    console.error(`FAIL  planePose quaternion not unit at ${i}`);
+    process.exit(1);
+  }
+  const nlen = Math.hypot(ap[0] - p[0], ap[1] - p[1], ap[2] - p[2]);
+  if (nlen > 0) {
+    const nx = (ap[0] - p[0]) / nlen;
+    const ny = (ap[1] - p[1]) / nlen;
+    const nz = (ap[2] - p[2]) / nlen;
+    const rotatedX = 2 * (q[0] * q[2] + q[3] * q[1]);
+    const rotatedY = 2 * (q[1] * q[2] - q[3] * q[0]);
+    const rotatedZ = 1 - 2 * (q[0] * q[0] + q[1] * q[1]);
+    const facing = rotatedX * nx + rotatedY * ny + rotatedZ * nz;
+    if (Math.abs(facing - 1) > 1e-6) {
+      console.error(`FAIL  planePose orientation at ${i}`);
+      process.exit(1);
+    }
+  }
 }
 
 function smoothstepLocal(a, b, t) {
