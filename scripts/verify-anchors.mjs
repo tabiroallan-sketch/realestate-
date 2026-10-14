@@ -47,7 +47,7 @@ for (const file of files) {
 /**
  * Ids reach the DOM two ways: written literally on a <section>, or passed as a
  * prop from `site.ts` into components that spread it onto an element
- * (`EditorialChapter` does `id={id}`). Collect both.
+ * (`Section` does `id={id}`). Collect both.
  */
 const renderedIds = new Set();
 for (const source of sources.values()) {

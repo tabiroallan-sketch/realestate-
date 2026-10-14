@@ -1,3 +1,5 @@
+> **SUPERSEDED 2026-10-07** by `docs/superpowers/specs/2026-10-07-full-site-redesign-design.md` — phases 3–10 retired; this file is historical.
+
 # THE VERDE RESIDENCES — Cinematic Interactive 3D Real Estate Website
 
 > Implementation plan. Nairobi, Kenya · luxury residential development · scroll-driven
