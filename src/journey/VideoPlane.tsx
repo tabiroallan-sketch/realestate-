@@ -104,7 +104,9 @@ export function VideoPlane({ src, poster, beatIndex, depth }: VideoPlaneProps) {
         markPlaneReady();
       },
       undefined,
-      () => {},
+      () => {
+        if (active) markPlaneReady();
+      },
     );
 
     return () => {

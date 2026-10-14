@@ -108,6 +108,7 @@ export function PhotoPlane({ src, beatIndex, depth }: PhotoPlaneProps) {
         failed.current = true;
         const mesh = meshRef.current;
         if (mesh) mesh.visible = false;
+        markPlaneReady();
       },
     );
 
