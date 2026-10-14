@@ -26,82 +26,115 @@ export type Waypoint = {
 };
 
 /**
- * Nine waypoints per the camera architecture. `t` values are deliberately
+ * Thirteen waypoints per the camera architecture. `t` values are deliberately
  * uneven: the aerial establishing shots get more scroll distance than the
- * threshold, which is a moment the camera should pass through quickly.
+ * threshold, which is a moment the camera should pass through quickly. The
+ * journey ends on `night` — the towers illuminated.
  */
 export const WAYPOINTS: Waypoint[] = [
   {
-    id: "aerial",
+    id: "arrival",
     position: [-115, 60, 130],
     target: [0, 37, 0],
     fov: 40,
     t: 0,
-    label: "Far aerial — establishing scale",
+    label: "Far aerial — arrival drift",
   },
   {
-    id: "approach",
+    id: "towers",
     position: [-64, 46, 80],
     target: [-6, 38, 4],
     fov: 44,
-    t: 0.14,
-    label: "Approaching the development",
+    t: 0.10,
+    label: "The towers, day exterior",
   },
   {
-    id: "entrance",
+    id: "development",
+    position: [-48, 30, 70],
+    target: [-4, 30, 2],
+    fov: 46,
+    t: 0.18,
+    label: "All three towers",
+  },
+  {
+    id: "threshold",
     position: [-34, 12, 62],
     target: [-4, 15, 6],
     fov: 52,
-    t: 0.3,
-    label: "Entrance at ground level",
+    t: 0.30,
+    label: "Threshold at street level",
   },
   {
     id: "lobby",
     position: [10, 6, 20],
     target: [4, 6, -6],
     fov: 38,
-    t: 0.44,
-    label: "Lobby — architectural framing",
+    t: 0.42,
+    label: "Lobby — wide",
   },
   {
-    id: "apartment",
+    id: "lobby-detail",
+    position: [14, 5, 6],
+    target: [6, 7, -14],
+    fov: 34,
+    t: 0.48,
+    label: "Lobby — sculptural stair",
+  },
+  {
+    id: "residence",
     position: [26, 5, -4],
     target: [12, 4, -22],
     fov: 34,
-    t: 0.58,
-    label: "Apartment — depth layering",
+    t: 0.56,
+    label: "Residence interior",
   },
   {
-    id: "balcony",
+    id: "living",
+    position: [30, 5, -14],
+    target: [16, 4, -34],
+    fov: 36,
+    t: 0.62,
+    label: "Living room, second angle",
+  },
+  {
+    id: "view",
     position: [30, 4, -30],
     target: [4, 6, -84],
     fov: 48,
-    t: 0.7,
+    t: 0.70,
     label: "Balcony — city reveal",
   },
   {
-    id: "rooftop",
+    id: "rooftop-rise",
+    position: [18, 58, 40],
+    target: [2, 50, -8],
+    fov: 46,
+    t: 0.78,
+    label: "Rising over the roof",
+  },
+  {
+    id: "rooftop-pool",
     position: [6, 74, 26],
     target: [0, 64, -6],
     fov: 50,
-    t: 0.82,
-    label: "Rooftop — vertical rise",
+    t: 0.85,
+    label: "Rooftop pool — skyline",
+  },
+  {
+    id: "night-facade",
+    position: [-40, 34, 74],
+    target: [-2, 34, 4],
+    fov: 44,
+    t: 0.93,
+    label: "Night facade, fins lit",
   },
   {
     id: "night",
     position: [-96, 58, 118],
     target: [0, 40, 0],
     fov: 42,
-    t: 0.91,
-    label: "Night exterior, illuminated",
-  },
-  {
-    id: "masterplan",
-    position: [-168, 176, 196],
-    target: [0, 30, 0],
-    fov: 48,
-    t: 1,
-    label: "Masterplan — pull back to the site",
+    t: 1.00,
+    label: "Night — towers illuminated",
   },
 ];
 
@@ -141,21 +174,9 @@ export function authoredToU(t: number): number {
   return 1;
 }
 
-/** Which chapters drive the canvas. The canvas spans the flight section. */
+/** The whole flight is driven by the single hero section. */
 export const JOURNEY_START_ID = "hero";
 export const JOURNEY_END_ID = "hero";
-
-/** Waypoint each chapter settles on, used by reduced-motion snapping. */
-export const CHAPTER_WAYPOINT: Record<string, string> = {
-  hero: "aerial",
-  development: "approach",
-  lobby: "entrance",
-  residence: "apartment",
-  balcony: "balcony",
-  rooftop: "rooftop",
-  "day-night": "night",
-  architecture: "masterplan",
-};
 
 /** Tallest tower height, in storeys — shared by geometry and camera framing. */
 export const TOWER_STOREYS = 22;

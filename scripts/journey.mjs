@@ -361,7 +361,7 @@ const authoredWaypoints = [
 
 check(
   "waypoints parsed from source",
-  authoredWaypoints.length >= 9,
+  authoredWaypoints.length === 13,
   `${authoredWaypoints.length} found`,
 );
 
