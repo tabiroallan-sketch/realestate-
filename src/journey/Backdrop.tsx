@@ -39,6 +39,7 @@ export function Backdrop() {
 
       const material = materialRef.current;
       if (material) {
+        material.color.set("#FFFFFF");
         material.map = texture;
         material.needsUpdate = true;
       }
@@ -68,6 +69,7 @@ export function Backdrop() {
       <sphereGeometry args={[800, 32, 16]} />
       <meshBasicMaterial
         ref={materialRef}
+        color={INK}
         side={THREE.BackSide}
         toneMapped={false}
         depthWrite={false}
