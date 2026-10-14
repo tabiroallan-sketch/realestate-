@@ -28,6 +28,7 @@ export function usePointerParallax(disabled: boolean) {
 
     const state = { x: 0, y: 0 };
     let frame = 0;
+    let last = 0;
 
     const onPointerMove = (event: PointerEvent) => {
       // Normalised device coords: -1 → 1 across the viewport, independent of
@@ -41,11 +42,13 @@ export function usePointerParallax(disabled: boolean) {
       state.y = 0;
     };
 
-    const tick = () => {
+    const tick = (now: number) => {
       frame = 0;
-      // ~180ms settle. Frame-rate dependent by design — the damping happens
-      // once per animation frame, and skipping frames should skip easing.
-      const ease = 0.075;
+      // Frame-rate independent damping: one time constant on a 60 Hz or a
+      // 144 Hz display, and skipping frames should skip easing.
+      const dt = last ? Math.min((now - last) / 1000, 0.1) : 1 / 60;
+      last = now;
+      const ease = 1 - Math.exp(-3 * dt);
       journey.parallax.x += (state.x - journey.parallax.x) * ease;
       journey.parallax.y += (state.y - journey.parallax.y) * ease;
     };

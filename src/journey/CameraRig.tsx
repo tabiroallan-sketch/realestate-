@@ -116,7 +116,7 @@ export function CameraRig() {
 
     // Frame-rate independent damping. Without the delta correction the camera
     // lags further on high-refresh displays and on struggling devices.
-    const damping = 1 - Math.exp(-4.2 * Math.min(delta, 0.1));
+    const damping = 1 - Math.exp(-3.2 * Math.min(delta, 0.1));
     view.position.lerp(target.desiredPosition, damping);
 
     target.lookAt.lerp(target.desiredTarget, damping);

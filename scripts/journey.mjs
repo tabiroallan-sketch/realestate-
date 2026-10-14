@@ -390,19 +390,36 @@ for (const w of authoredWaypoints) {
   const startFrame = await probePage.evaluate(() => window.__journeyProbe.frame);
 
   let reading = { frame: startFrame, camera: { x: 0, y: 0, z: 0 } };
-  try {
-    // Twelve frames is well past damping convergence at 4.2/s.
-    await probePage.waitForFunction(
-      (from) => window.__journeyProbe.frame - from >= 12,
-      startFrame,
-      { timeout: 30_000, polling: 100 },
-    );
-    reading = await probePage.evaluate(() => ({
+  // Wait for the damped camera to come to rest rather than a fixed frame count:
+  // convergence is a function of elapsed time, so a hard-coded frame budget is
+  // wrong at any other frame rate or damping constant. Sample consecutive
+  // distinct frames and stop once the camera has stopped moving.
+  let prev = null;
+  let lastFrame = startFrame;
+  const deadline = Date.now() + 25_000;
+  while (Date.now() < deadline) {
+    const sample = await probePage.evaluate(() => ({
       frame: window.__journeyProbe.frame,
       camera: { ...window.__journeyProbe.camera },
     }));
-  } catch {
-    // Left at the zero reading; the assertion below reports it as a miss.
+    if (sample.frame === lastFrame) {
+      await probePage.waitForTimeout(60);
+      continue;
+    }
+    lastFrame = sample.frame;
+    if (prev) {
+      const moved = Math.hypot(
+        sample.camera.x - prev.x,
+        sample.camera.y - prev.y,
+        sample.camera.z - prev.z,
+      );
+      if (moved < 0.02) {
+        reading = sample;
+        break;
+      }
+    }
+    prev = sample.camera;
+    await probePage.waitForTimeout(30);
   }
 
   const [wx, wy, wz] = w.position;

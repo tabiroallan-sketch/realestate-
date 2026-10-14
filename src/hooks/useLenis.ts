@@ -28,10 +28,10 @@ export function useLenis(enabled = true) {
     if (!enabled || reduced) return;
 
     const lenis = new Lenis({
-      duration: 1.15,
-      lerp: 0.085,
+      duration: 1.4,
+      lerp: 0.065,
       smoothWheel: true,
-      wheelMultiplier: 1,
+      wheelMultiplier: 0.9,
       touchMultiplier: 1.4,
       autoRaf: false,
     });

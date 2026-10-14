@@ -46,7 +46,7 @@ export function Reveal({
       gsap.from(ref.current, {
         opacity: 0,
         y,
-        duration: 0.9,
+        duration: 1.1,
         delay,
         ease: "expo.out",
         scrollTrigger: {
@@ -107,7 +107,7 @@ export function RevealGroup({
       gsap.from(items, {
         opacity: 0,
         y,
-        duration: 0.6,
+        duration: 0.75,
         stagger: Math.min(stagger, 0.1),
         ease: "power2.out",
         scrollTrigger: {

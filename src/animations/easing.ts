@@ -34,5 +34,5 @@ export const duration = {
 export const scrub = {
   tight: true,
   smooth: 1,
-  cinematic: 1.5,
+  cinematic: 2.2,
 } as const;
