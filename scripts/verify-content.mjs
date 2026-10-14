@@ -16,7 +16,9 @@ import {
   availability,
   trust,
   hero,
+  flight,
 } from "../src/data/site.ts";
+import { BEATS } from "../src/data/beats.ts";
 import { chapters, navigation, navigationCta } from "../src/data/navigation.ts";
 
 const failures = [];
@@ -102,6 +104,14 @@ check(
   "hero secondary CTA present",
   Boolean(hero.secondaryCta?.href),
   hero.secondaryCta ? hero.secondaryCta.href : "undefined",
+);
+
+check(
+  "flight chapters align with beats",
+  flight.chapters.length === BEATS.length &&
+    BEATS.every((beat, index) => flight.chapters[index].id === beat.id) &&
+    flight.chapters.every((chapter) => chapter.title && chapter.line),
+  `${flight.chapters.length} chapters for ${BEATS.length} beats`,
 );
 
 console.log("");

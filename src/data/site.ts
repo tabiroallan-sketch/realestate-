@@ -55,6 +55,32 @@ export const hero = {
   scrollHint: "Scroll to enter",
 } as const;
 
+/**
+ * Chapter titles over the flight.
+ *
+ * One entry per beat, keyed by beat id so the order can never drift from
+ * `BEATS`. The opening beat (arrival) is presented by the hero itself, so the
+ * overlay carries the rest; all of them are read by assistive tech.
+ */
+export const flight = {
+  label: "The flight",
+  chapters: [
+    { id: "arrival", title: "Arrival", line: "A new address above the city." },
+    { id: "towers", title: "The Towers", line: "Three towers, one silhouette." },
+    { id: "development", title: "Development View", line: "Ivory, bronze and glass, shaped by light." },
+    { id: "threshold", title: "Threshold", line: "The city falls away at the door." },
+    { id: "lobby", title: "Lobby", line: "A double-height welcome." },
+    { id: "lobby-detail", title: "Lobby Detail", line: "Sculpture underfoot, light overhead." },
+    { id: "residence", title: "Residence", line: "Rooms that open to the sky." },
+    { id: "living", title: "Living Room", line: "Space to gather, space to withdraw." },
+    { id: "view", title: "The View", line: "Nairobi, framed floor to ceiling." },
+    { id: "rooftop-rise", title: "Rooftop Rise", line: "Above the skyline's edge." },
+    { id: "rooftop-pool", title: "Rooftop Pool", line: "A pool against the horizon." },
+    { id: "night-facade", title: "Night Facade", line: "Bronze fins, lit from within." },
+    { id: "night", title: "Night", line: "The towers, illuminated." },
+  ],
+} as const;
+
 export const sections = {
   development: {
     id: "development",

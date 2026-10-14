@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 
 import { gsap, registerGsap } from "@/animations/gsap";
+import { FlightChapters } from "@/components/journey/FlightChapters";
 import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { ResponsivePicture } from "@/components/ui/ResponsivePicture";
@@ -147,6 +148,9 @@ export function FlightShell() {
 
         <div className="max-w-[16ch] md:max-w-none">
           <div data-hero-eyebrow>
+            <p className="numeral mb-3 text-bronze-dim">
+              01<span aria-hidden="true"> / {BEATS.length}</span>
+            </p>
             <Eyebrow className="mb-6 md:mb-8">{hero.eyebrow}</Eyebrow>
           </div>
 
@@ -249,6 +253,7 @@ export function FlightShell() {
               {photoLayer}
               {scrim}
               {overlay}
+              <FlightChapters />
             </div>
           </div>
         </div>

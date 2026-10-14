@@ -290,6 +290,24 @@ html:has(:focus-visible) {
 }
 
 /* ============================================================================
+   Flight chapters — one card paints at a time; JS sets `data-active`. The
+   reduced-motion reset collapses the fade to a step-cut with the camera.
+   ========================================================================= */
+
+[data-flight-chapter] {
+  opacity: 0;
+  transform: translateY(0.75rem);
+  transition:
+    opacity var(--duration-reveal) var(--ease-out-expo),
+    transform var(--duration-reveal) var(--ease-out-expo);
+}
+
+[data-flight-chapter][data-active="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* ============================================================================
    Accessibility utilities
    ========================================================================= */
 
