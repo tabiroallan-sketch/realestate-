@@ -57,6 +57,7 @@ export function JourneyScene() {
           <VideoPlane
             key={beat.id}
             src={heroVideo.webm}
+            fallbackSrc={heroVideo.mp4}
             poster={heroVideo.poster}
             beatIndex={index}
             depth={beat.depth}

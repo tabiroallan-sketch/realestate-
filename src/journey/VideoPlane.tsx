@@ -57,6 +57,7 @@ function featherTexture(): THREE.CanvasTexture {
 
 type VideoPlaneProps = {
   src: string;
+  fallbackSrc: string;
   poster: string;
   beatIndex: number;
   depth: number;
@@ -70,7 +71,7 @@ type VideoPlaneProps = {
  * starts (codec, autoplay policy, reduced motion) the poster simply stays, and
  * if the poster itself fails the beat drops like any other plane.
  */
-export function VideoPlane({ src, poster, beatIndex, depth }: VideoPlaneProps) {
+export function VideoPlane({ src, fallbackSrc, poster, beatIndex, depth }: VideoPlaneProps) {
   const reduced = useReducedMotion();
 
   const pose = useMemo(() => planePose(WAYPOINTS, beatIndex, depth), [beatIndex, depth]);
@@ -122,7 +123,18 @@ export function VideoPlane({ src, poster, beatIndex, depth }: VideoPlaneProps) {
     video.autoplay = true;
     video.loop = true;
     video.preload = "auto";
-    video.src = src;
+
+    // Two sources, not one: the webm is smaller where it decodes, the mp4 is the
+    // universal fallback for browsers (Safari, older Edge) that cannot play VP9.
+    // A single unsupported src leaves the poster standing forever.
+    const webm = document.createElement("source");
+    webm.src = src;
+    webm.type = "video/webm";
+    const mp4 = document.createElement("source");
+    mp4.src = fallbackSrc;
+    mp4.type = "video/mp4";
+    video.append(webm, mp4);
+
     videoRef.current = video;
 
     if (journeyProbe.enabled) {
@@ -169,11 +181,11 @@ export function VideoPlane({ src, poster, beatIndex, depth }: VideoPlaneProps) {
       video.removeEventListener("loadeddata", trySwap);
       video.removeEventListener("canplay", trySwap);
       video.pause();
-      video.removeAttribute("src");
+      video.replaceChildren();
       video.load();
       videoRef.current = null;
     };
-  }, [reduced, src]);
+  }, [reduced, src, fallbackSrc]);
 
   useFrame((state) => {
     const mesh = meshRef.current;
