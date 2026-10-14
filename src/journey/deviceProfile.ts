@@ -18,17 +18,15 @@ export type QualityBudget = {
   dpr: number;
   /** Maximum rooftop particles; 0 disables the system entirely. */
   particles: number;
-  /** Skyline instance count. */
-  skyline: number;
 };
 
 /** Coarse pointer and touch devices get the conservative budget. */
 const MOBILE_BREAKPOINT = 820;
 
 export const TIER_BUDGETS: Record<QualityTier, QualityBudget> = {
-  conservative: { dpr: 1, particles: 0, skyline: 220 },
-  balanced: { dpr: 1.5, particles: 1200, skyline: 420 },
-  high: { dpr: 2, particles: 3000, skyline: 620 },
+  conservative: { dpr: 1, particles: 0 },
+  balanced: { dpr: 1.5, particles: 1200 },
+  high: { dpr: 2, particles: 3000 },
 };
 
 /**

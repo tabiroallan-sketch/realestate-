@@ -69,7 +69,8 @@ page.on("requestfailed", (r) =>
 
 await page.goto(BASE, { waitUntil: "domcontentloaded" });
 await page.waitForSelector("[data-journey-canvas] canvas", { timeout: 30_000 });
-await page.waitForTimeout(3500);
+await page.waitForFunction(() => window.__verdePlanesReady === true, { timeout: 60_000 });
+await page.waitForTimeout(1000);
 
 check("journey canvas mounted", (await page.locator("[data-journey-canvas]").count()) === 1);
 check("webgl canvas element present", (await page.locator("[data-journey-canvas] canvas").count()) === 1);
@@ -247,7 +248,8 @@ await reducedPage.waitForSelector("[data-journey-canvas] canvas", {
   state: "attached",
   timeout: 60_000,
 });
-await reducedPage.waitForTimeout(4000);
+await reducedPage.waitForFunction(() => window.__verdePlanesReady === true, { timeout: 60_000 });
+await reducedPage.waitForTimeout(1000);
 
 const reducedOpening = await fingerprint(reducedPage);
 await reducedPage.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" }));
@@ -304,7 +306,7 @@ await mobilePage.waitForSelector("[data-journey-canvas] canvas", {
   state: "attached",
   timeout: 60_000,
 });
-await mobilePage.waitForTimeout(4000);
+await mobilePage.waitForTimeout(1000);
 
 const mobileDpr = await mobilePage.evaluate(() => {
   const canvas = document.querySelector("[data-journey-canvas] canvas");
@@ -378,6 +380,7 @@ await probePage.waitForSelector("[data-journey-canvas] canvas", {
   state: "attached",
   timeout: 60_000,
 });
+await probePage.waitForFunction(() => window.__verdePlanesReady === true, { timeout: 60_000 });
 await probePage.waitForTimeout(2500);
 
 const cameraMarks = [];

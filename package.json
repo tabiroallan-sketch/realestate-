@@ -15,7 +15,8 @@
     "verify:smoke": "node scripts/smoke.mjs",
     "verify:journey": "node scripts/journey.mjs",
     "verify:layout": "node scripts/audit-layout.mjs",
-    "verify:full": "npm run verify:anchors && npm run verify && node scripts/smoke.mjs && node scripts/journey.mjs && node scripts/audit-layout.mjs",
+    "verify:resilience": "node scripts/verify-plane-resilience.mjs",
+    "verify:full": "npm run verify:anchors && npm run verify && node scripts/smoke.mjs && node scripts/journey.mjs && node scripts/audit-layout.mjs && npm run verify:resilience",
     "assets:images": "node scripts/build-image-ladder.mjs",
     "assets:video": "node scripts/build-video.mjs",
     "assets": "npm run assets:images && npm run assets:video"

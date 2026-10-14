@@ -177,8 +177,3 @@ export function authoredToU(t: number): number {
 /** The whole flight is driven by the single hero section. */
 export const JOURNEY_START_ID = "hero";
 export const JOURNEY_END_ID = "hero";
-
-/** Tallest tower height, in storeys — shared by geometry and camera framing. */
-export const TOWER_STOREYS = 22;
-export const STOREY_HEIGHT = 3.6;
-export const TOWER_HEIGHT = TOWER_STOREYS * STOREY_HEIGHT;

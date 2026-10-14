@@ -1,22 +1,21 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 
+import { assets, heroVideo } from "@/data/assets";
+import { BEATS } from "@/data/beats";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { AdaptiveQuality, type QualityState } from "@/journey/AdaptiveQuality";
+import { Backdrop } from "@/journey/Backdrop";
 import { CameraRig } from "@/journey/CameraRig";
-import { Atmosphere } from "@/journey/environment/Atmosphere";
-import { City, Ground } from "@/journey/environment/City";
-import { Sky } from "@/journey/environment/Sky";
-import { TOWERS, TowerCluster } from "@/journey/TowerCluster";
+import { PhotoPlane } from "@/journey/PhotoPlane";
+import { initPlaneReady } from "@/journey/ready";
 import { markCanvasReady } from "@/journey/store";
-import { useDayCycle } from "@/journey/useDayCycle";
 import { useFrameloopGate } from "@/journey/useFrameloopGate";
 import { usePointerParallax } from "@/journey/usePointerParallax";
 import { useScrollProgress } from "@/journey/useScrollProgress";
-import { STOREY_HEIGHT } from "@/journey/waypoints";
-import { WindowLights } from "@/journey/WindowLights";
+import { VideoPlane } from "@/journey/VideoPlane";
 
 /**
  * The scene graph.
@@ -34,42 +33,43 @@ export function JourneyScene() {
     tier: "balanced",
     dpr: 1.5,
     particles: 1200,
-    skyline: 420,
   });
-
-  const day = useDayCycle(reduced);
 
   useScrollProgress();
   usePointerParallax(reduced);
   useFrameloopGate();
 
-  // The skyline instance count is the one quality value worth re-rendering for.
-  // Polled rather than subscribed: a tier change is rare, and subscribing would
-  // re-render the whole scene to change a single number.
-  const skyline = useSkylineCount(quality);
+  // Arms the plane-readiness seam. Child effects run before this one, but a
+  // texture decode is always asynchronous, so no `markPlaneReady` can land
+  // before the counter is armed.
+  useEffect(() => {
+    initPlaneReady(BEATS.length);
+  }, []);
 
   return (
     <>
       <AdaptiveQuality state={quality} />
       <CameraRig />
+      <Backdrop />
 
-      <Sky day={day} />
-      <Atmosphere day={day} density={0.00072} sunPosition={[-180, 210, 150]} />
-
-      <Ground />
-      <TowerCluster />
-      <WindowLights
-        night={day}
-        towers={TOWERS.map((tower) => ({
-          x: tower.x,
-          z: tower.z,
-          w: tower.w,
-          d: tower.d,
-          storeys: tower.storeys,
-        }))}
-        storeyHeight={STOREY_HEIGHT}
-      />
-      <City count={skyline} />
+      {BEATS.map((beat, index) =>
+        beat.id === "arrival" ? (
+          <VideoPlane
+            key={beat.id}
+            src={heroVideo.webm}
+            poster={heroVideo.poster}
+            beatIndex={index}
+            depth={beat.depth}
+          />
+        ) : (
+          <PhotoPlane
+            key={beat.id}
+            src={`${assets[beat.assetKey].srcSetBase}-1376.webp`}
+            beatIndex={index}
+            depth={beat.depth}
+          />
+        ),
+      )}
 
       <ReadySignal />
     </>
@@ -87,22 +87,4 @@ function ReadySignal() {
   });
 
   return null;
-}
-
-function useSkylineCount(quality: React.RefObject<QualityState>): number {
-  const [count, setCount] = useState(420);
-  const applied = useRef(420);
-
-  useEffect(() => {
-    const id = window.setInterval(() => {
-      const next = quality.current?.skyline ?? 420;
-      if (next === applied.current) return;
-      applied.current = next;
-      setCount(next);
-    }, 1500);
-
-    return () => window.clearInterval(id);
-  }, [quality]);
-
-  return count;
 }
