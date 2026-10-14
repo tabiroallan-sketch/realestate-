@@ -19,18 +19,38 @@ import { mkdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { loadWaypoints } from "./lib/waypoints.mjs";
+
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const REFS = path.join(ROOT, "image");
 const CAPS = path.join(ROOT, "scripts", "screenshots", "reference");
 const OUT = path.join(CAPS, "side-by-side");
 
 const PAIRS = [
-  { id: "aerial", cap: "aerial.png", stamp: "20261005095409", label: "Aerial render vs hero poster (three towers, midday)" },
-  { id: "approach", cap: "approach.png", stamp: "20261005095613", label: "Approach render vs development view" },
-  { id: "entrance", cap: "entrance.png", stamp: "20261005095442", label: "Entrance render vs street entrance photo" },
-  { id: "rooftop", cap: "rooftop.png", stamp: "20261005095523", label: "Rooftop render vs rooftop rise photo" },
-  { id: "night", cap: "night.png", stamp: "20261005095550", label: "Night render vs illuminated-at-night photo" },
+  { id: "arrival", stamp: "luxury_towers_N._20261005095409", threshold: 0.5, label: "Arrival — aerial video vs towers poster" },
+  { id: "towers", stamp: "luxury_towers_N._20261005095427", threshold: 0.8, label: "The towers, day exterior" },
+  { id: "development", stamp: "development_view_20261005095613", threshold: 0.8, label: "All three towers" },
+  { id: "threshold", stamp: "exterior_street._20261005095442", threshold: 0.8, label: "Threshold at street level" },
+  { id: "lobby", stamp: "lobby_interior_._20261005095500", threshold: 0.8, label: "Lobby — wide" },
+  { id: "lobby-detail", stamp: "Lobby_interior_with_sculptural_s._20261005095447", threshold: 0.8, label: "Lobby — sculptural stair" },
+  { id: "residence", stamp: "Luxury_apartment_interior_view_20261005095506", threshold: 0.8, label: "Residence interior" },
+  { id: "living", stamp: "Luxury_apartment_living_room_int._20261005095512", threshold: 0.8, label: "Living room, second angle" },
+  { id: "view", stamp: "Balcony_view_of_Nairobi_skyline_20261005095517", threshold: 0.8, label: "Balcony — city reveal" },
+  { id: "rooftop-rise", stamp: "Camera_rising_over_building_rooftop_20261005095523", threshold: 0.8, label: "Rising over the roof" },
+  { id: "rooftop-pool", stamp: "Rooftop_pool_overlooking_Nairobi._20261005095537", threshold: 0.8, label: "Rooftop pool — skyline" },
+  { id: "night-facade", stamp: "Building_facade_at_night_20261005095607", threshold: 0.8, label: "Night facade, fins lit" },
+  { id: "night", stamp: "Verde_Residences_illuminated_at_._20261005095550", threshold: 0.8, label: "Night — towers illuminated" },
 ];
+
+const GRID_W = 32;
+const GRID_H = 18;
+const VISIBLE = 0.934;
+const CORNER_W = 8;
+const CORNER_H = 5;
+const CORNER_FLOOR = 0.25;
+const FLAT_STD = 15;
+const FLAT_LUMA = 25;
+const LUMA_FLOOR = 12;
 
 const thr = 8; // luma delta that counts as structure
 const sustain = 4; // consecutive rows required
@@ -246,81 +266,152 @@ async function composite(pair, capFile, refFile) {
     .toFile(path.join(OUT, `${pair.id}.png`));
 }
 
+function normalizedName(name) {
+  return name.replace(/\u2026/g, ".");
+}
+
+async function grid(file, cover) {
+  let pipeline = sharp(file).removeAlpha();
+  if (cover && cover !== 1) {
+    const meta = await sharp(file).metadata();
+    const width = Math.round(meta.width * cover);
+    const height = Math.round(meta.height * cover);
+    pipeline = pipeline.extract({
+      left: Math.round((meta.width - width) / 2),
+      top: Math.round((meta.height - height) / 2),
+      width,
+      height,
+    });
+  }
+  const { data } = await pipeline
+    .resize(GRID_W, GRID_H, { fit: "fill" })
+    .grayscale()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  return data;
+}
+
+function correlation(a, b, indices) {
+  const n = indices.length;
+  let sa = 0;
+  let sb = 0;
+  for (const i of indices) {
+    sa += a[i];
+    sb += b[i];
+  }
+  const ma = sa / n;
+  const mb = sb / n;
+  let num = 0;
+  let da = 0;
+  let db = 0;
+  for (const i of indices) {
+    const x = a[i] - ma;
+    const y = b[i] - mb;
+    num += x * y;
+    da += x * x;
+    db += y * y;
+  }
+  const den = Math.sqrt(da * db);
+  return den > 0 ? num / den : 0;
+}
+
+function patchStats(values) {
+  let sum = 0;
+  for (const value of values) sum += value;
+  const mean = sum / values.length;
+  let sq = 0;
+  for (const value of values) sq += (value - mean) * (value - mean);
+  return { mean, std: Math.sqrt(sq / values.length) };
+}
+
+function indices(x0, y0, w, h) {
+  const out = [];
+  for (let y = y0; y < y0 + h; y += 1) {
+    for (let x = x0; x < x0 + w; x += 1) out.push(y * GRID_W + x);
+  }
+  return out;
+}
+
+const ALL = indices(0, 0, GRID_W, GRID_H);
+
+function cornerCoverage(cap, ref) {
+  const blocks = [
+    indices(0, 0, CORNER_W, CORNER_H),
+    indices(GRID_W - CORNER_W, 0, CORNER_W, CORNER_H),
+    indices(0, GRID_H - CORNER_H, CORNER_W, CORNER_H),
+    indices(GRID_W - CORNER_W, GRID_H - CORNER_H, CORNER_W, CORNER_H),
+  ];
+  let covered = 0;
+  for (const block of blocks) {
+    const capStats = patchStats(block.map((i) => cap[i]));
+    const refStats = patchStats(block.map((i) => ref[i]));
+    if (Math.min(capStats.std, refStats.std) < FLAT_STD) {
+      if (Math.abs(capStats.mean - refStats.mean) <= FLAT_LUMA) covered += 1;
+    } else if (correlation(cap, ref, block) >= CORNER_FLOOR) {
+      covered += 1;
+    }
+  }
+  return covered / blocks.length;
+}
+
+function meanLuma(cap) {
+  let sum = 0;
+  for (const value of cap) sum += value;
+  return sum / cap.length;
+}
+
 /* -- run ------------------------------------------------------------------- */
 
 await mkdir(OUT, { recursive: true });
 const files = await import("node:fs/promises").then((fs) => fs.readdir(REFS));
+const waypoints = await loadWaypoints();
+const authoredIds = waypoints.map((w) => w.id).join(",");
+const pairedIds = PAIRS.map((p) => p.id).join(",");
+if (authoredIds !== pairedIds) {
+  console.log("FAIL  PAIRS ids do not match authored waypoints");
+  process.exit(1);
+}
 const report = [];
 
 for (const pair of PAIRS) {
-  const refFile = files.find((f) => f.includes(pair.stamp) && f.endsWith(".jpg"));
+  const refFile = files.find((f) => normalizedName(f).includes(pair.stamp) && f.endsWith(".jpg"));
   if (!refFile) {
     console.log(`FAIL  no reference for ${pair.id} (stamp ${pair.stamp})`);
     process.exit(1);
   }
-  const capFile = path.join(CAPS, pair.cap);
-  const [cap, ref] = await Promise.all([analyse(capFile), analyse(path.join(REFS, refFile))]);
-  await composite(pair, capFile, path.join(REFS, refFile));
-  report.push({ pair, cap, ref, refFile });
+  const capFile = path.join(CAPS, `${pair.id}.png`);
+  const refPath = path.join(REFS, refFile);
+  const capGrid = await grid(capFile, 1);
+  const refGrid = await grid(refPath, VISIBLE);
+  const pearson = correlation(capGrid, refGrid, ALL);
+  const coverage = cornerCoverage(capGrid, refGrid);
+  const luma = meanLuma(capGrid);
+  await composite(pair, capFile, refPath);
+  report.push({ pair, refFile, pearson, coverage, luma });
 }
 
-for (const { pair, cap, ref, refFile } of report) {
+for (const { pair, refFile, pearson, coverage, luma } of report) {
   console.log(`\n== ${pair.id} — ${pair.label}`);
-  console.log(`  REF  ${refFile}  mean=${JSON.stringify(ref.mean)}`);
-  console.log(`    runs=${ref.runCount} horizon=${ref.horizonPct}%`);
-  console.log(`    palette raw=${JSON.stringify(ref.palette)} balanced=${JSON.stringify(ref.paletteBalanced)}`);
-  ref.runs.forEach((r, i) => console.log(fmtRun(r, i)));
-  console.log(`  CAP  ${cap.file} ${cap.size}  mean=${JSON.stringify(cap.mean)}`);
-  console.log(`    runs=${cap.runCount} horizon=${cap.horizonPct}%`);
-  console.log(`    palette raw=${JSON.stringify(cap.palette)} balanced=${JSON.stringify(cap.paletteBalanced)}`);
-  cap.runs.forEach((r, i) => console.log(fmtRun(r, i)));
+  console.log(`  REF  ${refFile}`);
+  console.log(
+    `  pearson=${pearson.toFixed(3)} (≥${pair.threshold})  cornerCoverage=${coverage.toFixed(2)} (≥0.5)  meanLuma=${luma.toFixed(1)} (>${LUMA_FLOOR})`,
+  );
 }
 
 console.log("\ncomposites → scripts/screenshots/reference/side-by-side/");
 
-/* -- gate ------------------------------------------------------------------
- *
- * The acceptance test for the facade/silhouette correction. Targets come from
- * the measured reference stills (bronze 19–29%, ivory 0–8%, aerial band energy
- * ≈1500) pulled toward the render with margin, and are asserted on renders
- * only: renders are neutral-graded by construction, so the raw palette is the
- * honest number — the white-balance control exists for the photographs.
- *
- * Run with `--gate` to turn the report into a pass/fail test.
- * -------------------------------------------------------------------------- */
-
 if (process.argv.includes("--gate")) {
-  const byId = Object.fromEntries(report.map((r) => [r.pair.id, r]));
-  const checks = [];
-  const check = (label, ok, detail) => checks.push({ label, ok, detail });
-
-  const aerial = byId.aerial.cap;
-  const night = byId.night.cap;
-
-  const aerialBronze = aerial.palette.bronze;
-  check("aerial render bronze ≥ 15%", aerialBronze >= 15, `got ${aerialBronze}%`);
-
-  const nightBronze = night.palette.bronze;
-  check("night render bronze ≥ 15%", nightBronze >= 15, `got ${nightBronze}%`);
-
-  const top3 = aerial.runs.slice(0, 3);
-  const energy = Math.round(top3.reduce((s, r) => s + r.energy, 0) / top3.length);
-  check("aerial band energy ≥ 500", energy >= 500, `got ${energy} (reference ≈1500)`);
-
-  check("aerial render ivory ≤ 20%", aerial.palette.ivory <= 20, `got ${aerial.palette.ivory}%`);
-
-  const widest = Math.max(...aerial.runs.map((r) => r.width));
-  check("aerial framing: widest tower run ≥ 70px", widest >= 70, `got ${widest}px (reference 91–108px)`);
-
-  const minTop = Math.min(...aerial.runs.map((r) => r.top));
-  const minTopPct = Math.round((minTop / (aerial.size.split("x")[1] | 0)) * 100);
-  check("aerial framing: tower top ≤ 20% of frame", minTopPct <= 20, `got ${minTopPct}% (reference 5–10%)`);
-
   console.log("");
   let failed = 0;
-  for (const c of checks) {
-    console.log(`${c.ok ? "PASS" : "FAIL"}  ${c.label} — ${c.detail}`);
-    if (!c.ok) failed += 1;
+  for (const { pair, pearson, coverage, luma } of report) {
+    const okPearson = pearson >= pair.threshold;
+    const okCoverage = coverage >= 0.5;
+    const okLuma = luma > LUMA_FLOOR;
+    const ok = okPearson && okCoverage && okLuma;
+    console.log(
+      `${ok ? "PASS" : "FAIL"}  ${pair.id.padEnd(13)} pearson=${pearson.toFixed(3)}/${pair.threshold}  cornerCoverage=${coverage.toFixed(2)}/0.50  meanLuma=${luma.toFixed(1)}/${LUMA_FLOOR}`,
+    );
+    if (!ok) failed += 1;
   }
   if (failed) {
     console.log(`\n${failed} gate check(s) failing`);
