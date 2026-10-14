@@ -7,10 +7,10 @@ const WAYPOINTS_PATH = path.join(ROOT, "src", "journey", "waypoints.ts");
 
 const waypointsSource = await readFile(WAYPOINTS_PATH, "utf8");
 
-const waypointRegex = /\{\s*id:\s*"([^"]+)"[\s\S]*?t:\s*([+-]?\d*\.?\d+(?:[eE][+-]?\d+)?)[\s\S]*?\}/g;
+const waypointRegex = /id:\s*"([^"]+)",\s*position:\s*\[\s*(-?[\d.]+),\s*(-?[\d.]+),\s*(-?[\d.]+)\s*\],[\s\S]*?fov:\s*([\d.]+),\s*t:\s*([\d.]+)/g;
 const waypoints = [];
 for (const match of waypointsSource.matchAll(waypointRegex)) {
-  waypoints.push({ id: match[1], t: Number.parseFloat(match[2]) });
+  waypoints.push({ id: match[1], t: Number.parseFloat(match[6]) });
 }
 
 if (waypoints.length !== 13) {
