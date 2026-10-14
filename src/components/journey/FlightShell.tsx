@@ -148,7 +148,7 @@ export function FlightShell() {
 
         <div className="max-w-[16ch] md:max-w-none">
           <div data-hero-eyebrow>
-            <p className="numeral mb-3 text-bronze-dim">
+            <p className="numeral mb-3 text-bronze">
               01<span aria-hidden="true"> / {BEATS.length}</span>
             </p>
             <Eyebrow className="mb-6 md:mb-8">{hero.eyebrow}</Eyebrow>

@@ -71,7 +71,7 @@ export function FlightChapters() {
         <ol
           aria-label={flight.label}
           start={2}
-          className="grid w-full max-w-[22rem] grid-cols-1 justify-items-end text-right"
+          className="grid w-full max-w-[26rem] grid-cols-1 justify-items-end text-right"
         >
           {chapters.map((chapter, index) => (
             <li
@@ -83,15 +83,15 @@ export function FlightChapters() {
               data-chapter={chapter.id}
               className="col-start-1 row-start-1"
             >
-              <p className="numeral text-bronze-dim">
+              <p className="numeral text-bronze">
                 {chapter.number}
                 <span aria-hidden="true"> / {total}</span>
               </p>
-              <p className="display-s mt-3 text-ivory">{chapter.title}</p>
-              <p className="caption mt-2 ml-auto max-w-[26ch]">{chapter.line}</p>
+              <p className="display-m mt-3 text-ivory">{chapter.title}</p>
+              <p className="body-copy mt-2 ml-auto max-w-[26ch] text-ivory">{chapter.line}</p>
               <span
                 aria-hidden="true"
-                className="ml-auto mt-4 block h-px w-10 bg-hairline-strong"
+                className="ml-auto mt-4 block h-px w-12 bg-hairline-strong"
               />
             </li>
           ))}
