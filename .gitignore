@@ -55,6 +55,6 @@ next-env.d.ts
 # superpowers session/plan workspace
 /.superpowers/
 # Smoke test artifacts
-scripts/smoke-quick.txt
-scripts/smoke-quick.err
+scripts/smoke-*
+scripts/screenshots/smoke-report.txt
 scripts/screenshots/reference/server.log
