@@ -4,11 +4,11 @@ import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
-import { easeInOutSine } from "@/animations/easing";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { createFlightPacing } from "@/journey/pacing";
 import { enableJourneyProbe, journeyProbe } from "@/journey/probe";
 import { journey } from "@/journey/store";
-import { authoredToU, WAYPOINTS, type Waypoint } from "@/journey/waypoints";
+import { WAYPOINTS, type Waypoint } from "@/journey/waypoints";
 
 /**
  * The single owner of camera state.
@@ -25,16 +25,9 @@ export function CameraRig() {
 
   // Position and target are separate curves. Sharing one curve makes the camera
   // stare straight down its own path; decoupling produces the operator feel.
-  const { positionCurve, targetCurve, fovStops } = useMemo(() => {
-    const points = WAYPOINTS.map((w) => new THREE.Vector3(...w.position));
-    const looks = WAYPOINTS.map((w) => new THREE.Vector3(...w.target));
-
-    return {
-      positionCurve: new THREE.CatmullRomCurve3(points, false, "centripetal", 0.5),
-      targetCurve: new THREE.CatmullRomCurve3(looks, false, "centripetal", 0.5),
-      fovStops: WAYPOINTS.map((w) => ({ t: w.t, fov: w.fov })),
-    };
-  }, []);
+  // `createFlightPacing` owns both curves plus the lens curve, so the frame
+  // loop and the pacing gate read identical numbers.
+  const pacing = useMemo(() => createFlightPacing(WAYPOINTS), []);
 
   // Scratch vectors — allocating per frame in useFrame triggers GC churn that
   // shows up as stutter during scroll.
@@ -58,24 +51,6 @@ export function CameraRig() {
     enableJourneyProbe();
   }, []);
 
-  /**
-   * Map curve parameter t to a field of view by interpolating between the
-   * nearest waypoint stops. Sampling the curve directly cannot express this:
-   * FOV is per-waypoint intent, not a function of arc length.
-   */
-  const fovAt = (t: number): number => {
-    const stops = fovStops;
-    for (let i = 0; i < stops.length - 1; i += 1) {
-      const a = stops[i];
-      const b = stops[i + 1];
-      if (t >= a.t && t <= b.t) {
-        const local = b.t === a.t ? 0 : (t - a.t) / (b.t - a.t);
-        return THREE.MathUtils.lerp(a.fov, b.fov, easeInOutSine(local));
-      }
-    }
-    return stops[stops.length - 1].fov;
-  };
-
   useFrame((_, delta) => {
     const view = cameraRef.current as THREE.PerspectiveCamera;
     const target = scratch.current;
@@ -94,14 +69,13 @@ export function CameraRig() {
       return;
     }
 
-    // `getPoint`, not `getPointAt`. `getPointAt` re-parameterises by arc length,
-    // which makes t mean "fraction of path distance" and silently discards the
-    // authored `t` weights in WAYPOINTS. `authoredToU` maps the authored value
-    // onto the curve's own parameter so t means "fraction of the waypoint
-    // sequence", which is what the data says it means.
-    const u = authoredToU(t);
-    positionCurve.getPoint(u, target.desiredPosition);
-    targetCurve.getPoint(u, target.desiredTarget);
+    // Pacing maps authored `t` onto normalised arc length with a C1 monotone
+    // interpolant: distance is covered at continuous speed, so there is no jerk
+    // where the camera passes a waypoint, while the authored `t` weights are
+    // preserved and every waypoint is met exactly. Sampling a raw `getPointAt`
+    // would throw those weights away — see pacing.ts.
+    pacing.positionAt(t, target.desiredPosition);
+    pacing.targetAt(t, target.desiredTarget);
 
     // Pointer parallax is a small offset perpendicular to the view direction,
     // not a translation along world axes — otherwise it swings the frame
@@ -122,7 +96,7 @@ export function CameraRig() {
     target.lookAt.lerp(target.desiredTarget, damping);
     view.lookAt(target.lookAt);
 
-    applyFov(view, fovAt(t));
+    applyFov(view, pacing.fovAt(t));
 
     // Reported after damping, so the probe measures where the camera actually
     // settled rather than where it was asked to go.

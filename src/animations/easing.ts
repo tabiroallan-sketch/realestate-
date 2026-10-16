@@ -15,11 +15,6 @@ export const ease = {
   architectural: "power4.inOut",
 } as const;
 
-/** Smoothstep-style 0 → 1 → 0 curve, for interpolating between authored stops. */
-export function easeInOutSine(t: number): number {
-  return -(Math.cos(Math.PI * t) - 1) / 2;
-}
-
 export const duration = {
   micro: 0.18,
   ui: 0.32,
@@ -34,5 +29,10 @@ export const duration = {
 export const scrub = {
   tight: true,
   smooth: 1,
-  cinematic: 2.2,
+  /**
+   * Scroll-follow lag for the camera, in seconds. Raised when the flight was
+   * first tuned; pulled back so the operator feel reads crisp rather than
+   * floaty now that the pacing remap removed the waypoint jerks.
+   */
+  cinematic: 1.3,
 } as const;

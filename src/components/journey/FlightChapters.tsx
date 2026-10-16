@@ -26,6 +26,7 @@ const chapters = BEATS.slice(1).map((beat, index) => {
     number: String(index + 2).padStart(2, "0"),
     title: chapter?.title ?? beat.label,
     line: chapter?.line ?? "",
+    body: chapter?.body ?? "",
   };
 });
 
@@ -88,7 +89,12 @@ export function FlightChapters() {
                 <span aria-hidden="true"> / {total}</span>
               </p>
               <p className="display-m mt-3 text-ivory">{chapter.title}</p>
-              <p className="body-copy mt-2 ml-auto max-w-[26ch] text-ivory">{chapter.line}</p>
+              <p className="body-copy mt-2 ml-auto hidden max-w-[26ch] text-ivory md:block">
+                {chapter.line}
+              </p>
+              <p className="body-copy mt-2 ml-auto max-w-[34ch] text-ivory-dim line-clamp-2 md:line-clamp-none">
+                {chapter.body}
+              </p>
               <span
                 aria-hidden="true"
                 className="ml-auto mt-4 block h-px w-12 bg-hairline-strong"

@@ -114,6 +114,20 @@ check(
   `${flight.chapters.length} chapters for ${BEATS.length} beats`,
 );
 
+const bodyIssues = flight.chapters
+  .filter(
+    (chapter) =>
+      !chapter.body ||
+      chapter.body.length <= chapter.line.length ||
+      chapter.body.length > 320,
+  )
+  .map((chapter) => `${chapter.id}:${chapter.body ? chapter.body.length : 0}`);
+check(
+  "flight chapter paragraphs present and within bounds",
+  bodyIssues.length === 0,
+  bodyIssues.length ? bodyIssues.join(", ") : `${flight.chapters.length} paragraphs`,
+);
+
 console.log("");
 if (failures.length) {
   console.log(`${failures.length} FAILED: ${failures.join(", ")}`);

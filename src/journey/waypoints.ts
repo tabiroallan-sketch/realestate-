@@ -139,40 +139,13 @@ export const WAYPOINTS: Waypoint[] = [
 ];
 
 /**
- * Map an authored `t` onto the curve's own parameter.
- *
- * `THREE.CatmullRomCurve3.getPoint(u)` treats `u` as a fraction of the *waypoint
- * sequence* — 0.5 is the midpoint between points 4 and 5. `getPointAt(u)` instead
- * re-parameterises by arc length, so 0.5 is the point 394 units along a 788-unit
- * path. Those are different numbers, and they only coincide when every segment
- * happens to be the same length.
- *
- * `WAYPOINTS[].t` is authored as the waypoint sequence, with deliberately uneven
- * spacing: the aerial establishing shots get more scroll than the threshold,
- * which the camera should pass through quickly. Sampling with `getPointAt`
- * therefore does not just shift the camera — it throws the authored weights away.
- * Measured drift before this existed: the camera stood 136.8 units from the
- * authored balcony waypoint and 154.0 units from the rooftop, 20.4% of the
- * journey. That is invisible on an exterior fly-past and fatal the moment a shot
- * has to be composed against a specific building.
- *
- * This remap is the whole fix: preserve the authored weights, sample by parameter.
+ * How authored `t` reaches the curve lives in `pacing.ts`. `t` is remapped
+ * onto normalised arc length read from the curve's own table, then
+ * interpolated with a monotone Hermite — so waypoint framing stays exact at
+ * every `t` while speed is continuous across segments. Neither a raw
+ * `getPointAt` (discards the weights above) nor index-space sampling (speed
+ * jumps at every waypoint) can do both.
  */
-export function authoredToU(t: number): number {
-  const clamped = t < 0 ? 0 : t > 1 ? 1 : t;
-  const last = WAYPOINTS.length - 1;
-
-  for (let i = 0; i < last; i += 1) {
-    const a = WAYPOINTS[i].t;
-    const b = WAYPOINTS[i + 1].t;
-    if (clamped >= a && clamped <= b) {
-      const local = b === a ? 0 : (clamped - a) / (b - a);
-      return (i + local) / last;
-    }
-  }
-
-  return 1;
-}
 
 /** The whole flight is driven by the single hero section. */
 export const JOURNEY_START_ID = "hero";
