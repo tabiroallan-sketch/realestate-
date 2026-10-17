@@ -3,6 +3,7 @@ import { Amenities } from "@/components/funnel/Amenities";
 import { Availability } from "@/components/funnel/Availability";
 import { Close } from "@/components/funnel/Close";
 import { Development } from "@/components/funnel/Development";
+import { Gallery } from "@/components/funnel/Gallery";
 import { LocationStrip } from "@/components/funnel/LocationStrip";
 import { ResidenceCollection } from "@/components/funnel/ResidenceCollection";
 import { Trust } from "@/components/funnel/Trust";
@@ -21,6 +22,7 @@ export default function Home() {
 
         <Development />
         <ResidenceCollection />
+        <Gallery />
         <Amenities />
         <LocationStrip />
         <Availability />

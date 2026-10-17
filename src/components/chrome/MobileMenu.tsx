@@ -9,6 +9,7 @@ import type { Chapter, NavItem } from "@/data/navigation";
 import { site } from "@/data/site";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { cn } from "@/lib/cn";
+import { whatsappHref } from "@/lib/whatsapp";
 
 type MobileMenuProps = {
   id: string;
@@ -157,7 +158,7 @@ export function MobileMenu({
 
         <div data-menu-item className="hairline-t px-[var(--gutter)] py-6">
           <ul className="grid grid-cols-2 gap-x-6 gap-y-2">
-            {chapters.slice(0, 8).map((chapter) => (
+            {chapters.map((chapter) => (
               <li key={chapter.id}>
                 <Link
                   href={`#${chapter.id}`}
@@ -173,6 +174,16 @@ export function MobileMenu({
           </ul>
 
           <div className="mt-6 flex flex-col gap-1">
+            <a
+              href={whatsappHref()}
+              target="_blank"
+              rel="noopener noreferrer"
+              tabIndex={open ? 0 : -1}
+              data-analytics="cta:menu-whatsapp"
+              className="mb-3 inline-flex min-h-11 items-center justify-center bg-bronze px-6 text-[0.625rem] font-medium uppercase tracking-[0.16em] text-ink"
+            >
+              Enquire on WhatsApp
+            </a>
             <a
               href={site.phoneHref}
               tabIndex={open ? 0 : -1}

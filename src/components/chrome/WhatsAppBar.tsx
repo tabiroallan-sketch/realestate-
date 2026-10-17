@@ -3,14 +3,16 @@
 import Link from "next/link";
 
 import { site } from "@/data/site";
+import { whatsappHref } from "@/lib/whatsapp";
 
 export function WhatsAppBar() {
   return (
     <Link
-      href={site.whatsappBase}
+      href={whatsappHref()}
       target="_blank"
       rel="noopener noreferrer"
       data-whatsapp-bar
+      data-analytics="cta:whatsapp-bar"
       aria-label="Contact sales on WhatsApp"
       className="fixed inset-x-0 bottom-0 z-80 lg:hidden bg-bronze pb-[env(safe-area-inset-bottom)]"
     >

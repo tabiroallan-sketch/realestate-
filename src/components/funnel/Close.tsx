@@ -2,7 +2,9 @@ import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
 import { sections, site } from "@/data/site";
+import { whatsappHref } from "@/lib/whatsapp";
 
+import { Enquiry } from "./Enquiry";
 import { SectionHeader } from "./SectionHeader";
 
 export function Close() {
@@ -23,17 +25,22 @@ export function Close() {
               headline={content.headline}
               body={content.body}
             />
+            <div className="mt-12" data-enquiry>
+              <Reveal delay={0.15}>
+                <Enquiry />
+              </Reveal>
+            </div>
           </div>
 
           <div className="col-span-4 md:col-span-6 lg:col-span-4 lg:col-start-9">
             <Reveal delay={0.1}>
               <div className="flex flex-wrap items-center gap-4">
                 <Button
-                  href={site.whatsappBase}
-                  variant="solid"
+                  href={whatsappHref()}
+                  variant="accent"
                   size="lg"
                   withArrow
-                  className="bg-bronze text-ink"
+                  analytics="cta:contact-whatsapp"
                 >
                   WhatsApp Sales
                 </Button>
@@ -41,7 +48,7 @@ export function Close() {
                   href={site.phoneHref}
                   variant="outline"
                   size="lg"
-                  className="border border-hairline"
+                  analytics="cta:contact-phone"
                 >
                   {site.phone}
                 </Button>

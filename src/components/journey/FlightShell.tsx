@@ -181,10 +181,21 @@ export function FlightShell() {
             data-hero-cta
             className="col-span-4 flex flex-wrap items-center gap-x-8 gap-y-4 md:col-span-3"
           >
-            <Button href={hero.primaryCta.href} variant="solid" size="lg" withArrow>
+            <Button
+              href={hero.primaryCta.href}
+              variant="solid"
+              size="lg"
+              withArrow
+              analytics="cta:hero-primary"
+            >
               {hero.primaryCta.label}
             </Button>
-            <Button href={hero.secondaryCta.href} variant="link" size="lg">
+            <Button
+              href={hero.secondaryCta.href}
+              variant="link"
+              size="lg"
+              analytics="cta:hero-secondary"
+            >
               {hero.secondaryCta.label}
             </Button>
           </div>

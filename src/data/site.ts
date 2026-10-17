@@ -158,6 +158,12 @@ export const sections = {
     eyebrow: "Residence Collection",
     headline: "Four Ways To Live.",
   },
+  gallery: {
+    id: "gallery",
+    eyebrow: "Gallery",
+    headline: "The Building, In Full.",
+    body: "From the approach through the gardens to the rooftop at dusk — a walk through the architecture as it is being built.",
+  },
   amenities: {
     id: "amenities",
     eyebrow: "Amenities",
@@ -266,13 +272,40 @@ export const amenitiesList = [
 ] as const;
 
 export const locationPoints = [
-  { label: "Nairobi CBD", note: "8 minutes" },
-  { label: "Westlands", note: "6 minutes" },
-  { label: "Upper Hill", note: "5 minutes" },
-  { label: "JKIA", note: "32 minutes" },
-  { label: "Wilson Airport", note: "14 minutes" },
-  { label: "Karura Forest", note: "7 minutes" },
+  { label: "Nairobi CBD", note: "8 minutes", minutes: 8, angle: 100 },
+  { label: "Westlands", note: "6 minutes", minutes: 6, angle: 292 },
+  { label: "Upper Hill", note: "5 minutes", minutes: 5, angle: 168 },
+  { label: "JKIA", note: "32 minutes", minutes: 32, angle: 122 },
+  { label: "Wilson Airport", note: "14 minutes", minutes: 14, angle: 185 },
+  { label: "Karura Forest", note: "7 minutes", minutes: 7, angle: 8 },
 ] as const;
+
+export const enquiry = {
+  fields: {
+    name: "Full name",
+    email: "Email address",
+    phone: "Phone",
+    interest: "Residence of interest",
+    message: "Message",
+  },
+  interestDefault: "Not sure yet",
+  messagePlaceholder: "Tell us what you're looking for, and when you'd like to view.",
+  consent: "I agree to be contacted about The Verde Residences.",
+  submit: "Send enquiry",
+  submitting: "Sending…",
+  successTitle: "Thank you.",
+  successBody:
+    "Your enquiry has been recorded. Continue on WhatsApp if you'd like a reply right away.",
+  successCta: "Continue on WhatsApp",
+  errors: {
+    name: "Please enter your name.",
+    email: "Please enter a valid email address.",
+    phone: "Please enter a contact number.",
+    consent: "Please accept to be contacted.",
+    summary: "Please correct the highlighted fields.",
+    form: "Something went wrong. Please try WhatsApp or call us.",
+  },
+} as const;
 
 export const footer = {
   legal: "The Verde Residences is a fictional development created as a design and engineering demonstration. Imagery is AI-generated. All content is illustrative.",

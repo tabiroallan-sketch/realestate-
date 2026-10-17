@@ -79,6 +79,21 @@ export const criticalAssets: { src: string; weight: number }[] = [
 /** Static OG image — a real file on disk, since crawlers ignore srcset. */
 export const ogImage = `${assets.heroPoster.srcSetBase}-1376.webp`;
 
+/**
+ * Ordered architectural walkthrough for the gallery. The key is typed so a
+ * renamed asset fails the build rather than 404-ing at runtime.
+ */
+export const gallery: { key: AssetKey; caption: string }[] = [
+  { key: "developmentTowers", caption: "Three towers, one silhouette" },
+  { key: "entranceStreet", caption: "The threshold at street level" },
+  { key: "lobbyWide", caption: "A double-height arrival lobby" },
+  { key: "lobbyDetail", caption: "Board-formed concrete stair" },
+  { key: "livingRoom", caption: "Living and dining as one room" },
+  { key: "balconySkyline", caption: "Nairobi, framed floor to ceiling" },
+  { key: "rooftopPool", caption: "The pool against the horizon" },
+  { key: "nightIlluminated", caption: "The towers, illuminated" },
+];
+
 export const intrinsicSize = {
   width: manifest.width,
   height: manifest.height,

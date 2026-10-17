@@ -112,20 +112,24 @@ const samples = await page.evaluate(() => {
   const parse = (value) => {
     const m = value.match(/[\d.]+/g);
     if (!m || m.length < 3) return null;
-    return m.slice(0, 3).map(Number);
+    return { rgb: m.slice(0, 3).map(Number), a: m.length >= 4 ? Number(m[3]) : 1 };
   };
 
-  // Walk up for the first non-transparent background that actually paints.
+  // Walk up for the first background that actually paints.
   const effectiveBg = (el) => {
     let node = el;
     while (node) {
-      const bg = parse(getComputedStyle(node).backgroundColor);
-      const alpha = getComputedStyle(node).backgroundColor.match(/[\d.]+/g);
-      if (bg && (!alpha || alpha.length < 4 || Number(alpha[3]) > 0.85)) return bg;
+      const c = parse(getComputedStyle(node).backgroundColor);
+      if (c && c.a > 0.85) return c.rgb;
       node = node.parentElement;
     }
     return [10, 12, 11];
   };
+
+  // Flatten a translucent foreground over the surface behind it — a faint
+  // token is composited before AA is judged, not assumed opaque.
+  const flatten = (fg, bg) =>
+    fg.rgb.map((channel, i) => Math.round(channel * fg.a + bg[i] * (1 - fg.a)));
 
   const targets = [
     [".body-copy", "body copy"],
@@ -135,6 +139,9 @@ const samples = await page.evaluate(() => {
     [".display-s", "display small"],
     [".display-l", "display large"],
     ["#hero p.body-copy", "hero body copy"],
+    ["[data-cta-label]", "cta label (hero)"],
+    ['[data-analytics="cta:nav-whatsapp"] [data-cta-label]', "cta label (nav)"],
+    ['[data-analytics="cta:availability-enquire"]', "availability cta"],
   ];
 
   return targets
@@ -142,9 +149,10 @@ const samples = await page.evaluate(() => {
       const el = document.querySelector(sel);
       if (!el) return null;
       const s = getComputedStyle(el);
-      const fg = parse(s.color);
+      const rawFg = parse(s.color);
       const bg = effectiveBg(el);
-      if (!fg) return null;
+      if (!rawFg) return null;
+      const fg = flatten(rawFg, bg);
       const size = parseFloat(s.fontSize);
       const weight = Number(s.fontWeight);
       const large = size >= 24 || (size >= 18.66 && weight >= 700);

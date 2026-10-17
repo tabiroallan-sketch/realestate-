@@ -4,7 +4,7 @@ import { Bodoni_Moda, Jost } from "next/font/google";
 import { Experience } from "@/components/Experience";
 import { Navigation } from "@/components/chrome/Navigation";
 import { ogImage } from "@/data/assets";
-import { site } from "@/data/site";
+import { architecture, site } from "@/data/site";
 
 import "lenis/dist/lenis.css";
 import "./globals.css";
@@ -96,9 +96,9 @@ const structuredData = {
       email: site.email,
       address: {
         "@type": "PostalAddress",
-        streetAddress: site.address.street,
+        streetAddress: `${site.address.street}, ${site.address.area}`,
         addressLocality: site.address.city,
-        addressRegion: site.address.area,
+        addressRegion: "Nairobi County",
         postalCode: site.address.postcode,
         addressCountry: "KE",
       },
@@ -130,13 +130,14 @@ const structuredData = {
       image: `${site.url}${ogImage}`,
       numberOfAccommodationUnits: {
         "@type": "QuantitativeValue",
-        value: 84,
+        value: architecture.residences,
       },
       address: {
         "@type": "PostalAddress",
-        streetAddress: site.address.street,
+        streetAddress: `${site.address.street}, ${site.address.area}`,
         addressLocality: site.address.city,
-        addressLocality2: site.address.area,
+        addressRegion: "Nairobi County",
+        postalCode: site.address.postcode,
         addressCountry: "KE",
       },
       geo: {
@@ -144,7 +145,7 @@ const structuredData = {
         latitude: -1.2864,
         longitude: 36.8172,
       },
-      numberOfFloors: 22,
+      numberOfFloors: architecture.storeys,
       amenityFeature: [
         { "@type": "LocationFeatureSpecification", name: "Rooftop infinity pool", value: true },
         { "@type": "LocationFeatureSpecification", name: "24-hour concierge", value: true },

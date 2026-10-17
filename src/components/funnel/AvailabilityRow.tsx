@@ -1,5 +1,6 @@
-import { availability, site } from "@/data/site";
+import { availability } from "@/data/site";
 import { cn } from "@/lib/cn";
+import { whatsappHref } from "@/lib/whatsapp";
 
 type Row = (typeof availability)["rows"][number];
 
@@ -9,24 +10,21 @@ type AvailabilityRowProps = {
 };
 
 export function AvailabilityRow({ row, typeName }: AvailabilityRowProps) {
-  const href =
-    site.whatsappBase +
-    "?text=" +
-    encodeURIComponent(
-      `Enquiry about ${row.unit} — ${typeName} — ${row.size} — ${row.price} at The Verde Residences.`,
-    );
+  const href = whatsappHref(
+    `Enquiry about ${row.unit} — ${typeName} — ${row.size} — ${row.price} at The Verde Residences.`,
+  );
 
   return (
     <li
       data-availability-row
-      className="hairline-t flex flex-wrap items-center justify-between gap-x-6 gap-y-4 py-5"
+      className="hairline-t flex flex-wrap items-center justify-between gap-x-8 gap-y-5 py-6"
     >
       <div>
         <div className="flex flex-wrap items-center gap-3">
           <span className="display-s">{row.unit}</span>
           <span
             className={cn(
-              "inline-block border px-2.5 py-1 text-[0.5625rem] font-medium uppercase tracking-[0.14em]",
+              "inline-block border px-2.5 py-1 text-[0.625rem] font-medium uppercase tracking-[0.14em]",
               row.status === "Available"
                 ? "border-bronze text-bronze"
                 : "border-hairline text-ivory-faint",
@@ -41,9 +39,12 @@ export function AvailabilityRow({ row, typeName }: AvailabilityRowProps) {
       </div>
 
       <div className="flex items-center gap-6">
-        <span className="numeral text-bronze">{row.price}</span>
+        <span className="display-s text-bronze">{row.price}</span>
         <a
           href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-analytics="cta:availability-enquire"
           className="inline-flex min-h-11 items-center bg-bronze px-5 text-[0.625rem] font-medium uppercase tracking-[0.16em] text-ink transition-opacity duration-[var(--duration-ui)] hover:opacity-90"
         >
           <span className="visually-hidden">

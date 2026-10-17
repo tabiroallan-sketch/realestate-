@@ -1,7 +1,7 @@
 import { architecture, footer, site } from "@/data/site";
 
 export function SiteFooter() {
-  const year = 2026;
+  const year = new Date().getFullYear();
 
   return (
     <footer className="relative border-t border-hairline bg-ink-sunken pb-16 lg:pb-0">

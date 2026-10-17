@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { chapters, navigation, navigationCta } from "@/data/navigation";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
 import { cn } from "@/lib/cn";
+import { whatsappHref } from "@/lib/whatsapp";
 
 /** Scroll distance before the bar gains its background. */
 const CONDENSE_AT = 40;
@@ -106,10 +107,12 @@ export function Navigation() {
 
             <div className="flex items-center gap-4">
               <Button
-                href={navigationCta.href}
+                href={whatsappHref()}
+                variant="accent"
                 size="md"
                 withArrow
-                className="hidden bg-bronze text-ink border-transparent hover:opacity-90 md:inline-flex"
+                analytics="cta:nav-whatsapp"
+                className="hidden md:inline-flex"
               >
                 {navigationCta.label}
               </Button>
@@ -156,7 +159,7 @@ export function Navigation() {
         onClose={() => setMenuOpen(false)}
         onCtaClick={onCtaClick}
         chapters={chapters}
-        links={[...navigation, navigationCta]}
+        links={navigation}
       />
     </>
   );

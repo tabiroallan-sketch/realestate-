@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { Loader } from "@/components/chrome/Loader";
 import { ScrollProgress } from "@/components/chrome/ScrollProgress";
@@ -8,6 +8,7 @@ import { WhatsAppBar } from "@/components/chrome/WhatsAppBar";
 import { criticalAssets } from "@/data/assets";
 import { useLenis } from "@/hooks/useLenis";
 import { JourneyCanvas } from "@/journey/JourneyCanvas";
+import { track } from "@/lib/analytics";
 
 /**
  * Client shell for the whole experience.
@@ -21,6 +22,39 @@ export function Experience({ children }: { children: React.ReactNode }) {
   const onComplete = useCallback(() => setRevealed(true), []);
 
   useLenis(revealed);
+
+  // One delegated listener for every `data-analytics` control, plus one
+  // intersection observer for section views — so only the elements that opt in
+  // emit, and no per-component wiring is needed.
+  useEffect(() => {
+    const onClick = (event: MouseEvent) => {
+      const target = (event.target as Element | null)?.closest<HTMLElement>("[data-analytics]");
+      if (target?.dataset.analytics) track(target.dataset.analytics);
+    };
+
+    document.addEventListener("click", onClick);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          const id = (entry.target as HTMLElement).id;
+          if (id) track("section_view", { section: id });
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.4 },
+    );
+
+    for (const section of document.querySelectorAll<HTMLElement>("main section[id]")) {
+      observer.observe(section);
+    }
+
+    return () => {
+      document.removeEventListener("click", onClick);
+      observer.disconnect();
+    };
+  }, []);
 
   return (
     <>

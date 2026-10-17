@@ -15,9 +15,9 @@
   /* --- Identity: ivory concrete, bronze fins, blue-tinted glass, foliage -- */
   --color-ivory: #e8e2d5;
   --color-ivory-dim: rgba(232, 226, 213, 0.62);
-  --color-ivory-faint: rgba(232, 226, 213, 0.38);
+  --color-ivory-faint: rgba(232, 226, 213, 0.58);
   --color-bronze: #b98a45;
-  --color-bronze-dim: rgba(185, 138, 69, 0.55);
+  --color-bronze-dim: rgba(185, 138, 69, 0.88);
 
   /* --- Semantic ----------------------------------------------------------- */
   --color-surface: var(--color-ink);
@@ -67,8 +67,13 @@
 }
 
 /* ============================================================================
-   Reset
+   Reset — inside @layer base so Tailwind utilities always win over these
+   element rules. Unlayered styles beat *every* layered rule regardless of
+   specificity, which would otherwise make `a { color: inherit }` override
+   `text-ink` on a link.
    ========================================================================= */
+
+@layer base {
 
 *,
 *::before,
@@ -139,6 +144,8 @@ canvas,
 svg {
   display: block;
   max-width: 100%;
+}
+
 }
 
 /* ============================================================================

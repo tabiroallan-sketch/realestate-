@@ -5,6 +5,7 @@ export type NavItem = {
 
 export const navigation: NavItem[] = [
   { label: "Residences", href: "#residences" },
+  { label: "Gallery", href: "#gallery" },
   { label: "Amenities", href: "#amenities" },
   { label: "Availability", href: "#availability" },
   { label: "Contact", href: "#contact" },
@@ -30,9 +31,10 @@ export const chapters: Chapter[] = [
   { id: "hero", index: "01", label: "The Flight" },
   { id: "development", index: "02", label: "The Development" },
   { id: "residences", index: "03", label: "Residences" },
-  { id: "amenities", index: "04", label: "Amenities" },
-  { id: "location", index: "05", label: "Location" },
-  { id: "availability", index: "06", label: "Availability" },
-  { id: "trust", index: "07", label: "The Developer" },
-  { id: "contact", index: "08", label: "Enquire" },
+  { id: "gallery", index: "04", label: "Gallery" },
+  { id: "amenities", index: "05", label: "Amenities" },
+  { id: "location", index: "06", label: "Location" },
+  { id: "availability", index: "07", label: "Availability" },
+  { id: "trust", index: "08", label: "The Developer" },
+  { id: "contact", index: "09", label: "Enquire" },
 ];
