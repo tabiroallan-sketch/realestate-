@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 
 import { gsap, registerGsap } from "@/animations/gsap";
@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { ResponsivePicture } from "@/components/ui/ResponsivePicture";
 import { BEATS } from "@/data/beats";
-import { assets } from "@/data/assets";
+import { assets, heroVideo } from "@/data/assets";
 import { architecture, hero, site } from "@/data/site";
 import { useCanvasReady } from "@/hooks/useCanvasReady";
 import { useMounted } from "@/hooks/useMounted";
@@ -27,6 +27,34 @@ export function FlightShell() {
   const mounted = useMounted();
   const stack = mounted && !supported;
   const poster = assets.heroPoster;
+
+  // The arrival clip as a real DOM element, so the opening video plays even when
+  // the WebGL layer cannot render it. It is decorative — the `poster` attribute
+  // stands in until the first frame decodes.
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (!mounted) return;
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Start playback explicitly as well as via the `autoPlay` attribute, and
+    // retry once on the first interaction in case the browser deferred autoplay.
+    const start = () => {
+      const played = video.play();
+      if (played && typeof played.catch === "function") played.catch(() => {});
+    };
+    start();
+
+    const onGesture = () => start();
+    window.addEventListener("pointerdown", onGesture, { once: true });
+    window.addEventListener("keydown", onGesture, { once: true });
+
+    return () => {
+      window.removeEventListener("pointerdown", onGesture);
+      window.removeEventListener("keydown", onGesture);
+    };
+  }, [mounted]);
 
   useGSAP(
     () => {
@@ -50,6 +78,21 @@ export function FlightShell() {
           },
         });
       }
+
+      // The DOM arrival clip hands off to the flight over the first stretch of
+      // the hero. This must run in every motion mode: the layer is opaque and
+      // lives inside the sticky viewport, so if it never fades it hides the
+      // whole flight (and its chapter beats) for the entire hero.
+      gsap.to("[data-hero-video]", {
+        opacity: 0,
+        ease: "none",
+        scrollTrigger: {
+          trigger: root,
+          start: "top top",
+          end: "12% top",
+          scrub: 1,
+        },
+      });
 
       if (reduced) {
         gsap.set(
@@ -88,7 +131,7 @@ export function FlightShell() {
         },
       });
     },
-    { scope: rootRef, dependencies: [reduced, stack] },
+    { scope: rootRef, dependencies: [reduced, stack, mounted] },
   );
 
   const photoLayer = (
@@ -123,6 +166,36 @@ export function FlightShell() {
       />
     </div>
   );
+
+  // Mounted client-side only: an SSR <video> makes Chrome fetch a metadata
+  // probe, then abort it the moment we switch preload/play — a stray failed
+  // request. Creating it once after hydration avoids that entirely.
+  const videoLayer = mounted ? (
+    <div
+      data-hero-video
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+    >
+      <div data-hero-media className="h-full w-full will-change-transform">
+        <video
+          ref={videoRef}
+          className="h-full w-full object-cover"
+          poster={heroVideo.poster}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          tabIndex={-1}
+          aria-hidden="true"
+          disablePictureInPicture
+        >
+          <source src={heroVideo.webm} type="video/webm" />
+          <source src={heroVideo.mp4} type="video/mp4" />
+        </video>
+      </div>
+    </div>
+  ) : null;
 
   const scrim = (
     <div
@@ -252,6 +325,7 @@ export function FlightShell() {
         <div key="stack">
           <div className="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden">
             {photoLayer}
+            {videoLayer}
             {scrim}
             {overlay}
           </div>
@@ -262,6 +336,7 @@ export function FlightShell() {
           <div className="sticky top-0 h-[100svh] overflow-hidden">
             <div className="relative isolate flex h-full flex-col justify-end">
               {photoLayer}
+              {videoLayer}
               {scrim}
               {overlay}
               <FlightChapters />
